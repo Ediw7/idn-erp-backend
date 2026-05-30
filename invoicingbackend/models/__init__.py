@@ -8,3 +8,13 @@ from . import setup_gudang
 from . import setup_group_barang
 from . import setup_item
 from . import setup_pembayaran
+from . import setup_pelanggan
+from . import setup_supplier
+from . import setup_proyek
+from . import setup_salesman
+from . import setup_jenis_potongan
+from . import setup_format_bukti
+from . import setup_faktur_pajak
+from . import setup_jenis_pajak
+from . import setup_jenis_setoran
+from . import setup_bahasa

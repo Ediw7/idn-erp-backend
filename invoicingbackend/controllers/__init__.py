@@ -9,3 +9,13 @@ from . import api_setup_gudang
 from . import api_setup_group_barang
 from . import api_setup_item
 from . import api_setup_pembayaran
+from . import api_setup_pelanggan
+from . import api_setup_supplier
+from . import api_setup_proyek
+from . import api_setup_salesman
+from . import api_setup_jenis_potongan
+from . import api_setup_format_bukti
+from . import api_setup_faktur_pajak
+from . import api_setup_jenis_pajak
+from . import api_setup_jenis_setoran
+from . import api_setup_bahasa
