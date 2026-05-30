@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_invoicingbackend_preferensi,invoicingbackend.preferensi,model_invoicingbackend_preferensi,base.group_user,1,1,1,1
+access_invoicingbackend_mata_uang,invoicingbackend.mata_uang,model_invoicingbackend_mata_uang,base.group_user,1,1,1,1
+access_invoicingbackend_kurs_pajak,invoicingbackend.kurs_pajak,model_invoicingbackend_kurs_pajak,base.group_user,1,1,1,1
+access_invoicingbackend_tanda_tangan,invoicingbackend.tanda_tangan,model_invoicingbackend_tanda_tangan,base.group_user,1,1,1,1
+access_invoicingbackend_perkiraan,invoicingbackend.perkiraan,model_invoicingbackend_perkiraan,base.group_user,1,1,1,1

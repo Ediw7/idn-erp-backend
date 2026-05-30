@@ -7,7 +7,9 @@
     'website': '',
     'category': 'Accounting/Localizations',
     'depends': ['base', 'account'],
-    'data': [],
+    'data': [
+        'security/ir.model.access.csv'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
