@@ -4,3 +4,7 @@ from . import setup_mata_uang
 from . import setup_kurs_pajak
 from . import setup_tanda_tangan
 from . import setup_perkiraan
+from . import setup_gudang
+from . import setup_group_barang
+from . import setup_item
+from . import setup_pembayaran

@@ -5,3 +5,7 @@ from . import api_setup_mata_uang
 from . import api_setup_kurs_pajak
 from . import api_setup_tanda_tangan
 from . import api_setup_perkiraan
+from . import api_setup_gudang
+from . import api_setup_group_barang
+from . import api_setup_item
+from . import api_setup_pembayaran
