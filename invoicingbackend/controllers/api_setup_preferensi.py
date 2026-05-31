@@ -2,7 +2,7 @@ from odoo import http
 from odoo.http import request
 
 class ApiSetupPreferensi(http.Controller):
-    @http.route('/api/setup/preferensi/get', type='json', auth='user', methods=['POST'], cors='*')
+    @http.route('/api/setup/preferensi/get', type='json', auth='public', methods=['POST'], cors='*')
     def get_preferensi(self, **kw):
         try:
             pref = request.env['invoicingbackend.preferensi'].sudo().get_preferences()
@@ -10,7 +10,7 @@ class ApiSetupPreferensi(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/preferensi/save', type='json', auth='user', methods=['POST'], cors='*')
+    @http.route('/api/setup/preferensi/save', type='json', auth='public', methods=['POST'], cors='*')
     def save_preferensi(self, **kw):
         data = kw
         try:
