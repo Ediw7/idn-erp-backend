@@ -1,7 +1,7 @@
 from odoo import http
 from odoo.http import request
 
-class SetupController(http.Controller):
+class ApiSetupPerusahaan(http.Controller):
 
     @http.route('/api/setup/perusahaan/get', type='json', auth='public', methods=['POST'], cors='*')
     def get_perusahaan(self, **kwargs):
@@ -49,7 +49,10 @@ class SetupController(http.Controller):
             
             # Update company data securely
             update_vals = {}
-            if 'name' in data: update_vals['name'] = data['name']
+            if 'name' in data:
+                if not data['name']:
+                    return {'status': 'error', 'message': 'Nama perusahaan tidak boleh kosong'}
+                update_vals['name'] = data['name']
             if 'street' in data: update_vals['street'] = data['street']
             if 'city' in data: update_vals['city'] = data['city']
             if 'zip' in data: update_vals['zip'] = data['zip']
