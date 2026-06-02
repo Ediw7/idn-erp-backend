@@ -76,7 +76,7 @@ class ApiSetupPerusahaan(http.Controller):
             if 'kode_klu' in data: update_vals['idn_kode_klu'] = data['kode_klu']
             if 'wajib_ppnbm' in data: update_vals['idn_wajib_ppnbm'] = data['wajib_ppnbm']
 
-            company.write(update_vals)
+            company.sudo().write(update_vals)
             
             return {'status': 'success', 'message': 'Data perusahaan berhasil diperbarui', 'id': company.id}
         except Exception as e:
