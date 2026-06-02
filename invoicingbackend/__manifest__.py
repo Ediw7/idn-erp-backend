@@ -8,7 +8,8 @@
     'category': 'Accounting/Localizations',
     'depends': ['base', 'account'],
     'data': [
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'security/rules.xml'
     ],
     'installable': True,
     'application': True,

@@ -3,14 +3,14 @@ from odoo.http import request
 
 class ApiSetupKursPajak(http.Controller):
     
-    @http.route('/api/setup/kurspajak/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/kurspajak/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_kurs_pajak(self, **kw):
         try:
             mata_uang_id = kw.get('mata_uang_id')
             if not mata_uang_id:
                 return {'status': 'error', 'message': 'ID Mata Uang wajib diisi'}
                 
-            records = request.env['invoicingbackend.kurs_pajak'].sudo().search([('mata_uang_id', '=', int(mata_uang_id))], order='tgl_dari desc')
+            records = request.env['invoicingbackend.kurs_pajak'].search([('mata_uang_id', '=', int(mata_uang_id))], order='tgl_dari desc')
             data = []
             for rec in records:
                 data.append({
@@ -26,7 +26,7 @@ class ApiSetupKursPajak(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/kurspajak/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/kurspajak/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_kurs_pajak(self, **kw):
         try:
             params = kw
@@ -46,26 +46,26 @@ class ApiSetupKursPajak(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.kurs_pajak'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.kurs_pajak'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.kurs_pajak'].sudo().create(vals)
+                record = request.env['invoicingbackend.kurs_pajak'].create(vals)
                 
             return {'status': 'success', 'message': 'Kurs Pajak berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/kurspajak/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/kurspajak/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_kurs_pajak(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.kurs_pajak'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.kurs_pajak'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Kurs Pajak berhasil dihapus'}

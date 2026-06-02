@@ -3,7 +3,7 @@ from odoo.http import request
 
 class ApiSetupItem(http.Controller):
     
-    @http.route('/api/setup/item/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/item/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_item(self, **kw):
         try:
             params = kw
@@ -16,7 +16,7 @@ class ApiSetupItem(http.Controller):
             if params.get('group_barang_id'):
                 domain.append(('group_barang_id', '=', int(params.get('group_barang_id'))))
                 
-            records = request.env['invoicingbackend.item'].sudo().search(domain, order='kode asc')
+            records = request.env['invoicingbackend.item'].search(domain, order='kode asc')
             data = []
             for rec in records:
                 data.append({
@@ -40,7 +40,7 @@ class ApiSetupItem(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/item/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/item/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_item(self, **kw):
         try:
             params = kw
@@ -61,26 +61,26 @@ class ApiSetupItem(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.item'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.item'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.item'].sudo().create(vals)
+                record = request.env['invoicingbackend.item'].create(vals)
                 
             return {'status': 'success', 'message': 'Item berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/item/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/item/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_item(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.item'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.item'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Item berhasil dihapus'}

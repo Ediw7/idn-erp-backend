@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupPembayaran(http.Controller):
     
-    @http.route('/api/setup/pembayaran/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pembayaran/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_pembayaran(self, **kw):
         try:
-            records = request.env['invoicingbackend.pembayaran'].sudo().search([], order='kode asc')
+            records = request.env['invoicingbackend.pembayaran'].search([], order='kode asc')
             data = []
             for rec in records:
                 data.append({
@@ -19,7 +19,7 @@ class ApiSetupPembayaran(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/pembayaran/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pembayaran/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_pembayaran(self, **kw):
         try:
             params = kw
@@ -32,26 +32,26 @@ class ApiSetupPembayaran(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.pembayaran'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.pembayaran'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.pembayaran'].sudo().create(vals)
+                record = request.env['invoicingbackend.pembayaran'].create(vals)
                 
             return {'status': 'success', 'message': 'Cara Pembayaran berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/pembayaran/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pembayaran/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_pembayaran(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.pembayaran'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.pembayaran'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Cara Pembayaran berhasil dihapus'}

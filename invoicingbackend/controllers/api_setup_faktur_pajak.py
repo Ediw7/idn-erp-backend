@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupFakturPajak(http.Controller):
     
-    @http.route('/api/setup/faktur_pajak/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/faktur_pajak/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_faktur_pajak(self, **kw):
         try:
-            records = request.env['invoicingbackend.faktur_pajak'].sudo().search([], order='tgl_awal desc')
+            records = request.env['invoicingbackend.faktur_pajak'].search([], order='tgl_awal desc')
             data = []
             for rec in records:
                 data.append({
@@ -22,7 +22,7 @@ class ApiSetupFakturPajak(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/faktur_pajak/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/faktur_pajak/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_faktur_pajak(self, **kw):
         try:
             params = kw
@@ -38,26 +38,26 @@ class ApiSetupFakturPajak(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.faktur_pajak'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.faktur_pajak'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.faktur_pajak'].sudo().create(vals)
+                record = request.env['invoicingbackend.faktur_pajak'].create(vals)
                 
             return {'status': 'success', 'message': 'Setup Faktur Pajak berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/faktur_pajak/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/faktur_pajak/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_faktur_pajak(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.faktur_pajak'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.faktur_pajak'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Setup Faktur Pajak berhasil dihapus'}

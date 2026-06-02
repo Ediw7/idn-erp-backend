@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupGudang(http.Controller):
     
-    @http.route('/api/setup/gudang/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/gudang/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_gudang(self, **kw):
         try:
-            records = request.env['invoicingbackend.gudang'].sudo().search([], order='kode_gudang asc')
+            records = request.env['invoicingbackend.gudang'].search([], order='kode_gudang asc')
             data = []
             for rec in records:
                 data.append({
@@ -20,7 +20,7 @@ class ApiSetupGudang(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/gudang/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/gudang/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_gudang(self, **kw):
         try:
             params = kw
@@ -36,32 +36,32 @@ class ApiSetupGudang(http.Controller):
             
             # Uncheck other defaults if this one is set to default
             if is_default:
-                other_defaults = request.env['invoicingbackend.gudang'].sudo().search([('is_default', '=', True)])
+                other_defaults = request.env['invoicingbackend.gudang'].search([('is_default', '=', True)])
                 if record_id:
                     other_defaults = other_defaults.filtered(lambda r: r.id != record_id)
                 other_defaults.write({'is_default': False})
             
             if record_id:
-                record = request.env['invoicingbackend.gudang'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.gudang'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.gudang'].sudo().create(vals)
+                record = request.env['invoicingbackend.gudang'].create(vals)
                 
             return {'status': 'success', 'message': 'Data Gudang berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/gudang/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/gudang/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_gudang(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.gudang'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.gudang'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Gudang berhasil dihapus'}

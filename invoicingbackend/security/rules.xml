@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="rule_invoicingbackend_preferensi_user" model="ir.rule">
+            <field name="name">invoicingbackend.preferensi User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_preferensi"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_preferensi_admin" model="ir.rule">
+            <field name="name">invoicingbackend.preferensi Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_preferensi"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_mata_uang_user" model="ir.rule">
+            <field name="name">invoicingbackend.mata_uang User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_mata_uang_admin" model="ir.rule">
+            <field name="name">invoicingbackend.mata_uang Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_kurs_pajak_user" model="ir.rule">
+            <field name="name">invoicingbackend.kurs_pajak User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_kurs_pajak_admin" model="ir.rule">
+            <field name="name">invoicingbackend.kurs_pajak Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_tanda_tangan_user" model="ir.rule">
+            <field name="name">invoicingbackend.tanda_tangan User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_tanda_tangan_admin" model="ir.rule">
+            <field name="name">invoicingbackend.tanda_tangan Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_perkiraan_user" model="ir.rule">
+            <field name="name">invoicingbackend.perkiraan User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_perkiraan_admin" model="ir.rule">
+            <field name="name">invoicingbackend.perkiraan Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_gudang_user" model="ir.rule">
+            <field name="name">invoicingbackend.gudang User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_gudang"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_gudang_admin" model="ir.rule">
+            <field name="name">invoicingbackend.gudang Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_gudang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_group_barang_user" model="ir.rule">
+            <field name="name">invoicingbackend.group_barang User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_group_barang"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_group_barang_admin" model="ir.rule">
+            <field name="name">invoicingbackend.group_barang Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_group_barang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_item_user" model="ir.rule">
+            <field name="name">invoicingbackend.item User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_item"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_item_admin" model="ir.rule">
+            <field name="name">invoicingbackend.item Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_item"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pembayaran_user" model="ir.rule">
+            <field name="name">invoicingbackend.pembayaran User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pembayaran_admin" model="ir.rule">
+            <field name="name">invoicingbackend.pembayaran Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pelanggan_user" model="ir.rule">
+            <field name="name">invoicingbackend.pelanggan User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pelanggan_admin" model="ir.rule">
+            <field name="name">invoicingbackend.pelanggan Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_supplier_user" model="ir.rule">
+            <field name="name">invoicingbackend.supplier User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_supplier"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_supplier_admin" model="ir.rule">
+            <field name="name">invoicingbackend.supplier Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_supplier"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_proyek_user" model="ir.rule">
+            <field name="name">invoicingbackend.proyek User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_proyek"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_proyek_admin" model="ir.rule">
+            <field name="name">invoicingbackend.proyek Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_proyek"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_salesman_user" model="ir.rule">
+            <field name="name">invoicingbackend.salesman User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_salesman"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_salesman_admin" model="ir.rule">
+            <field name="name">invoicingbackend.salesman Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_salesman"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_potongan_user" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_potongan User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_potongan_admin" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_potongan Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_format_bukti_user" model="ir.rule">
+            <field name="name">invoicingbackend.format_bukti User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_format_bukti_admin" model="ir.rule">
+            <field name="name">invoicingbackend.format_bukti Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_faktur_pajak_user" model="ir.rule">
+            <field name="name">invoicingbackend.faktur_pajak User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_faktur_pajak_admin" model="ir.rule">
+            <field name="name">invoicingbackend.faktur_pajak Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_pajak_user" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_pajak User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_pajak_admin" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_pajak Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_setoran_user" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_setoran User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_setoran_admin" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_setoran Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_bahasa_user" model="ir.rule">
+            <field name="name">invoicingbackend.bahasa User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_bahasa"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_bahasa_admin" model="ir.rule">
+            <field name="name">invoicingbackend.bahasa Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_bahasa"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -3,7 +3,7 @@ from odoo.http import request
 
 class ApiSetupPerkiraan(http.Controller):
     
-    @http.route('/api/setup/perkiraan/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/perkiraan/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_perkiraan(self, **kw):
         try:
             params = kw
@@ -17,7 +17,7 @@ class ApiSetupPerkiraan(http.Controller):
             if nama_perkiraan:
                 domain.append(('nama_perkiraan', 'ilike', nama_perkiraan))
                 
-            records = request.env['invoicingbackend.perkiraan'].sudo().search(domain, order='no_perkiraan asc')
+            records = request.env['invoicingbackend.perkiraan'].search(domain, order='no_perkiraan asc')
             data = []
             for rec in records:
                 data.append({
@@ -30,7 +30,7 @@ class ApiSetupPerkiraan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/perkiraan/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/perkiraan/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_perkiraan(self, **kw):
         try:
             params = kw
@@ -43,26 +43,26 @@ class ApiSetupPerkiraan(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.perkiraan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.perkiraan'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.perkiraan'].sudo().create(vals)
+                record = request.env['invoicingbackend.perkiraan'].create(vals)
                 
             return {'status': 'success', 'message': 'Perkiraan berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/perkiraan/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/perkiraan/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_perkiraan(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.perkiraan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.perkiraan'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Perkiraan berhasil dihapus'}

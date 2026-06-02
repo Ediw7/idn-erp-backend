@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupPelanggan(http.Controller):
     
-    @http.route('/api/setup/pelanggan/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pelanggan/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_pelanggan(self, **kw):
         try:
-            records = request.env['invoicingbackend.pelanggan'].sudo().search([], order='kode asc')
+            records = request.env['invoicingbackend.pelanggan'].search([], order='kode asc')
             data = []
             for rec in records:
                 data.append({
@@ -40,7 +40,7 @@ class ApiSetupPelanggan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/pelanggan/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pelanggan/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_pelanggan(self, **kw):
         try:
             params = kw
@@ -72,26 +72,26 @@ class ApiSetupPelanggan(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.pelanggan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.pelanggan'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.pelanggan'].sudo().create(vals)
+                record = request.env['invoicingbackend.pelanggan'].create(vals)
                 
             return {'status': 'success', 'message': 'Pelanggan berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/pelanggan/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pelanggan/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_pelanggan(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.pelanggan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.pelanggan'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Pelanggan berhasil dihapus'}
@@ -101,7 +101,7 @@ class ApiSetupPelanggan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/pelanggan/import_batch', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/pelanggan/import_batch', type='json', auth='user', methods=['POST'], cors='*')
     def import_batch_pelanggan(self, **kw):
         try:
             params = kw
@@ -109,7 +109,7 @@ class ApiSetupPelanggan(http.Controller):
             if not items:
                 return {'status': 'error', 'message': 'Data kosong'}
                 
-            env_pelanggan = request.env['invoicingbackend.pelanggan'].sudo()
+            env_pelanggan = request.env['invoicingbackend.pelanggan']
             success_count = 0
             
             for item in items:

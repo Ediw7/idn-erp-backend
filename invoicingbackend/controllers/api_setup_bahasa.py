@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupBahasa(http.Controller):
     
-    @http.route('/api/setup/bahasa/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/bahasa/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_bahasa(self, **kw):
         try:
-            records = request.env['invoicingbackend.bahasa'].sudo().search([], order='jenis_objek asc, nama_objek asc, id asc')
+            records = request.env['invoicingbackend.bahasa'].search([], order='jenis_objek asc, nama_objek asc, id asc')
             data = []
             for rec in records:
                 data.append({
@@ -20,7 +20,7 @@ class ApiSetupBahasa(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/bahasa/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/bahasa/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_bahasa(self, **kw):
         try:
             params = kw
@@ -34,26 +34,26 @@ class ApiSetupBahasa(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.bahasa'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.bahasa'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.bahasa'].sudo().create(vals)
+                record = request.env['invoicingbackend.bahasa'].create(vals)
                 
             return {'status': 'success', 'message': 'Setup Bahasa berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/bahasa/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/bahasa/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_bahasa(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.bahasa'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.bahasa'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Setup Bahasa berhasil dihapus'}

@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupTandaTangan(http.Controller):
     
-    @http.route('/api/setup/tandatangan/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/tandatangan/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_tanda_tangan(self, **kw):
         try:
-            records = request.env['invoicingbackend.tanda_tangan'].sudo().search([])
+            records = request.env['invoicingbackend.tanda_tangan'].search([])
             data = []
             for rec in records:
                 data.append({
@@ -21,7 +21,7 @@ class ApiSetupTandaTangan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/tandatangan/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/tandatangan/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_tanda_tangan(self, **kw):
         try:
             params = kw
@@ -43,26 +43,26 @@ class ApiSetupTandaTangan(http.Controller):
                 vals['ttd_image'] = ttd_str
             
             if record_id:
-                record = request.env['invoicingbackend.tanda_tangan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.tanda_tangan'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.tanda_tangan'].sudo().create(vals)
+                record = request.env['invoicingbackend.tanda_tangan'].create(vals)
                 
             return {'status': 'success', 'message': 'Tanda Tangan berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/tandatangan/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/tandatangan/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_tanda_tangan(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.tanda_tangan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.tanda_tangan'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Tanda Tangan berhasil dihapus'}

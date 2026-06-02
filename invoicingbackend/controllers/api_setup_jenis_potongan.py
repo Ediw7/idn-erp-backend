@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupJenisPotongan(http.Controller):
     
-    @http.route('/api/setup/jenis_potongan/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_potongan/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_jenis_potongan(self, **kw):
         try:
-            records = request.env['invoicingbackend.jenis_potongan'].sudo().search([], order='kode asc')
+            records = request.env['invoicingbackend.jenis_potongan'].search([], order='kode asc')
             data = []
             for rec in records:
                 data.append({
@@ -20,7 +20,7 @@ class ApiSetupJenisPotongan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/jenis_potongan/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_potongan/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_jenis_potongan(self, **kw):
         try:
             params = kw
@@ -33,26 +33,26 @@ class ApiSetupJenisPotongan(http.Controller):
             }
             
             if record_id:
-                record = request.env['invoicingbackend.jenis_potongan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.jenis_potongan'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.jenis_potongan'].sudo().create(vals)
+                record = request.env['invoicingbackend.jenis_potongan'].create(vals)
                 
             return {'status': 'success', 'message': 'Jenis Potongan berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/jenis_potongan/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_potongan/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_jenis_potongan(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.jenis_potongan'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.jenis_potongan'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Jenis Potongan berhasil dihapus'}

@@ -3,7 +3,7 @@ from odoo.http import request
 
 class ApiSetupPerusahaan(http.Controller):
 
-    @http.route('/api/setup/perusahaan/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/perusahaan/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_perusahaan(self, **kwargs):
         try:
             # Retrieve the company (public user defaults to company 1)
@@ -41,7 +41,7 @@ class ApiSetupPerusahaan(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/perusahaan/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/perusahaan/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_perusahaan(self, **kw):
         try:
             data = kw
@@ -76,7 +76,7 @@ class ApiSetupPerusahaan(http.Controller):
             if 'kode_klu' in data: update_vals['idn_kode_klu'] = data['kode_klu']
             if 'wajib_ppnbm' in data: update_vals['idn_wajib_ppnbm'] = data['wajib_ppnbm']
 
-            company.sudo().write(update_vals)
+            company.write(update_vals)
             
             return {'status': 'success', 'message': 'Data perusahaan berhasil diperbarui', 'id': company.id}
         except Exception as e:

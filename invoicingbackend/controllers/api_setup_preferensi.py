@@ -2,19 +2,19 @@ from odoo import http
 from odoo.http import request
 
 class ApiSetupPreferensi(http.Controller):
-    @http.route('/api/setup/preferensi/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/preferensi/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_preferensi(self, **kw):
         try:
-            pref = request.env['invoicingbackend.preferensi'].sudo().get_preferences()
+            pref = request.env['invoicingbackend.preferensi'].get_preferences()
             return {'status': 'success', 'data': pref}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/preferensi/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/preferensi/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_preferensi(self, **kw):
         data = kw
         try:
-            pref = request.env['invoicingbackend.preferensi'].sudo().search([], limit=1)
+            pref = request.env['invoicingbackend.preferensi'].search([], limit=1)
             
             # Map frontend camelCase to backend snake_case
             update_vals = {
@@ -59,7 +59,7 @@ class ApiSetupPreferensi(http.Controller):
             }
             
             if not pref:
-                request.env['invoicingbackend.preferensi'].sudo().create(update_vals)
+                request.env['invoicingbackend.preferensi'].create(update_vals)
             else:
                 pref.write(update_vals)
                 

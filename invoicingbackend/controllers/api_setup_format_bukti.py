@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupFormatBukti(http.Controller):
     
-    @http.route('/api/setup/format_bukti/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/format_bukti/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_format_bukti(self, **kw):
         try:
-            records = request.env['invoicingbackend.format_bukti'].sudo().search([], order='periode desc')
+            records = request.env['invoicingbackend.format_bukti'].search([], order='periode desc')
             data = []
             for rec in records:
                 data.append({
@@ -69,7 +69,7 @@ class ApiSetupFormatBukti(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/format_bukti/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/format_bukti/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_format_bukti(self, **kw):
         try:
             params = kw
@@ -79,26 +79,26 @@ class ApiSetupFormatBukti(http.Controller):
             vals = {k: v for k, v in params.items() if k != 'id'}
             
             if record_id:
-                record = request.env['invoicingbackend.format_bukti'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.format_bukti'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.format_bukti'].sudo().create(vals)
+                record = request.env['invoicingbackend.format_bukti'].create(vals)
                 
             return {'status': 'success', 'message': 'Format No Bukti berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/format_bukti/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/format_bukti/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_format_bukti(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.format_bukti'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.format_bukti'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Format No Bukti berhasil dihapus'}

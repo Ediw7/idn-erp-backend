@@ -3,10 +3,10 @@ from odoo.http import request
 
 class ApiSetupJenisSetoran(http.Controller):
     
-    @http.route('/api/setup/jenis_setoran/get', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_setoran/get', type='json', auth='user', methods=['POST'], cors='*')
     def get_jenis_setoran(self, **kw):
         try:
-            records = request.env['invoicingbackend.jenis_setoran'].sudo().search([], order='jenis_pajak_id asc, kode asc')
+            records = request.env['invoicingbackend.jenis_setoran'].search([], order='jenis_pajak_id asc, kode asc')
             data = []
             for rec in records:
                 data.append({
@@ -21,7 +21,7 @@ class ApiSetupJenisSetoran(http.Controller):
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/jenis_setoran/save', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_setoran/save', type='json', auth='user', methods=['POST'], cors='*')
     def save_jenis_setoran(self, **kw):
         try:
             params = kw
@@ -37,26 +37,26 @@ class ApiSetupJenisSetoran(http.Controller):
                 return {'status': 'error', 'message': 'MAP (Jenis Pajak) harus diisi'}
                 
             if record_id:
-                record = request.env['invoicingbackend.jenis_setoran'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.jenis_setoran'].browse(record_id)
                 if record.exists():
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
-                record = request.env['invoicingbackend.jenis_setoran'].sudo().create(vals)
+                record = request.env['invoicingbackend.jenis_setoran'].create(vals)
                 
             return {'status': 'success', 'message': 'Kode Jenis Setoran berhasil disimpan', 'id': record.id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    @http.route('/api/setup/jenis_setoran/delete', type='json', auth='public', methods=['POST'], cors='*')
+    @http.route('/api/setup/jenis_setoran/delete', type='json', auth='user', methods=['POST'], cors='*')
     def delete_jenis_setoran(self, **kw):
         try:
             params = kw
             record_id = params.get('id')
             
             if record_id:
-                record = request.env['invoicingbackend.jenis_setoran'].sudo().browse(record_id)
+                record = request.env['invoicingbackend.jenis_setoran'].browse(record_id)
                 if record.exists():
                     record.unlink()
                     return {'status': 'success', 'message': 'Kode Jenis Setoran berhasil dihapus'}
