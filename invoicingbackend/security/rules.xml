@@ -267,5 +267,20 @@
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
+
+        <!-- Saldo Awal Piutang -->
+        <record id="rule_invoicingbackend_saldo_awal_piutang_user" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_piutang User Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_invoicingbackend_saldo_awal_piutang_admin" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_piutang Admin Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
     </data>
 </odoo>

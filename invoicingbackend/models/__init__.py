@@ -18,3 +18,4 @@ from . import setup_faktur_pajak
 from . import setup_jenis_pajak
 from . import setup_jenis_setoran
 from . import setup_bahasa
+from . import saldo_awal_piutang
