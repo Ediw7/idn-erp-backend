@@ -1,0 +1,66 @@
+from odoo import models, fields, api
+
+class SalesOrder(models.Model):
+    _name = 'invoicingbackend.sales_order'
+    _description = 'Sales Order'
+
+    no_so = fields.Char(string='No. Sales Order', required=True)
+    tgl_so = fields.Date(string='Tgl Sales Order', required=True, default=fields.Date.context_today)
+    pelanggan_id = fields.Many2one('invoicingbackend.pelanggan', string='Pelanggan', required=True)
+    alamat_kirim = fields.Text(string='Dikirim ke Alamat')
+    
+    no_po = fields.Char(string='No. PO Pelanggan')
+    tgl_po = fields.Date(string='Tgl PO')
+    mata_uang_id = fields.Many2one('invoicingbackend.mata_uang', string='Mata Uang')
+    pembayaran_id = fields.Many2one('invoicingbackend.pembayaran', string='Cara Pembayaran')
+    salesman_id = fields.Many2one('invoicingbackend.salesman', string='Salesman')
+    tgl_kirim = fields.Date(string='Tgl Kirim')
+    dipesan_oleh = fields.Char(string='Dipesan Oleh')
+    
+    is_closed = fields.Boolean(string='Closed', default=False)
+    is_void = fields.Boolean(string='Void', default=False)
+    
+    keterangan = fields.Text(string='Keterangan')
+    
+    subtotal = fields.Float(string='Sub Total', compute='_compute_totals', store=True)
+    potongan_harga = fields.Float(string='Potongan Harga')
+    ppn_persen = fields.Float(string='PPN (%)', default=10.0)
+    ppn_amount = fields.Float(string='PPN Amount', compute='_compute_totals', store=True)
+    ongkos_angkut = fields.Float(string='Ongkos Angkut')
+    total = fields.Float(string='Total', compute='_compute_totals', store=True)
+    
+    line_ids = fields.One2many('invoicingbackend.sales_order_line', 'so_id', string='Detail Barang/Jasa')
+
+    @api.depends('line_ids.harga_jual', 'potongan_harga', 'ppn_persen', 'ongkos_angkut')
+    def _compute_totals(self):
+        for record in self:
+            subtotal = sum(line.harga_jual for line in record.line_ids)
+            record.subtotal = subtotal
+            
+            dpp = subtotal - record.potongan_harga
+            ppn_amt = dpp * (record.ppn_persen / 100.0)
+            record.ppn_amount = ppn_amt
+            
+            record.total = dpp + ppn_amt + record.ongkos_angkut
+
+class SalesOrderLine(models.Model):
+    _name = 'invoicingbackend.sales_order_line'
+    _description = 'Sales Order Line'
+
+    so_id = fields.Many2one('invoicingbackend.sales_order', string='Sales Order', ondelete='cascade')
+    item_id = fields.Many2one('invoicingbackend.item', string='Kode Barang', required=True)
+    nama_barang = fields.Char(related='item_id.nama', string='Nama Barang', readonly=True)
+    satuan = fields.Char(string='Satuan')
+    kuantum = fields.Float(string='Kuantum', default=1.0)
+    harga_satuan = fields.Float(string='Harga Satuan')
+    disc_persen = fields.Float(string='% Disc')
+    disc_harga = fields.Float(string='Discount Harga')
+    harga_jual = fields.Float(string='Harga Jual', compute='_compute_harga_jual', store=True)
+    keterangan = fields.Char(string='Keterangan')
+
+    @api.depends('kuantum', 'harga_satuan', 'disc_persen', 'disc_harga')
+    def _compute_harga_jual(self):
+        for line in self:
+            base_price = line.kuantum * line.harga_satuan
+            discount = (base_price * (line.disc_persen / 100.0)) + line.disc_harga
+            line.harga_jual = base_price - discount
