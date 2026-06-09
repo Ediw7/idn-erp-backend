@@ -61,6 +61,9 @@ class ApiSetupPerusahaan(http.Controller):
             if 'email' in data: update_vals['email'] = data['email']
             if 'website' in data: update_vals['website'] = data['website']
             if 'fax' in data: update_vals['idn_fax'] = data['fax']
+            if 'maks_pelanggan' in data: update_vals['idn_maks_pelanggan'] = data['maks_pelanggan']
+            if 'periode_serial' in data: update_vals['idn_periode_serial'] = data['periode_serial']
+            if 'no_serial' in data: update_vals['idn_no_serial'] = data['no_serial']
             
             if 'npwp' in data: update_vals['l10n_id_npwp'] = data['npwp']
             if 'nitku' in data: update_vals['l10n_id_nitku'] = data['nitku']
