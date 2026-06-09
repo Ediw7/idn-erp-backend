@@ -12,6 +12,7 @@ class ApiSetupPelanggan(http.Controller):
                 data.append({
                     'id': rec.id,
                     'kode': rec.kode or '',
+                    'is_ekspor': rec.is_ekspor or False,
                     'nama': rec.nama or '',
                     'alamat': rec.alamat or '',
                     'telepon': rec.telepon or '',
@@ -24,6 +25,7 @@ class ApiSetupPelanggan(http.Controller):
                     'nik': rec.nik or '',
                     'alamat_wp': rec.alamat_wp or '',
                     'jenis_transaksi': rec.jenis_transaksi or '01',
+                    'ket_tambahan': rec.ket_tambahan or '',
                     'email': rec.email or '',
                     'contact_person': rec.contact_person or '',
                     'no_hp': rec.no_hp or '',
@@ -48,6 +50,7 @@ class ApiSetupPelanggan(http.Controller):
             
             vals = {
                 'kode': params.get('kode'),
+                'is_ekspor': params.get('is_ekspor') or False,
                 'nama': params.get('nama'),
                 'alamat': params.get('alamat'),
                 'telepon': params.get('telepon'),
@@ -60,6 +63,7 @@ class ApiSetupPelanggan(http.Controller):
                 'nik': params.get('nik'),
                 'alamat_wp': params.get('alamat_wp'),
                 'jenis_transaksi': params.get('jenis_transaksi') or '01',
+                'ket_tambahan': params.get('ket_tambahan'),
                 'email': params.get('email'),
                 'contact_person': params.get('contact_person'),
                 'no_hp': params.get('no_hp'),

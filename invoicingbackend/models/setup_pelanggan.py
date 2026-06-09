@@ -5,6 +5,7 @@ class Pelanggan(models.Model):
     _description = 'Setup Pelanggan'
 
     kode = fields.Char(string='Kode Pelanggan', required=True)
+    is_ekspor = fields.Boolean(string='Ekspor', default=False)
     nama = fields.Char(string='Nama Pelanggan', required=True)
     alamat = fields.Text(string='Alamat Pelanggan')
     telepon = fields.Char(string='No. Telepon')
@@ -30,6 +31,7 @@ class Pelanggan(models.Model):
         ('09', 'Penyerahan Aktiva (09)')
     ], string='Jenis Transaksi', default='01')
     
+    ket_tambahan = fields.Char(string='Ket Tambahan')
     email = fields.Char(string='Email')
     contact_person = fields.Char(string='Contact Person')
     no_hp = fields.Char(string='No HP')

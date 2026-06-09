@@ -9,7 +9,8 @@
     'depends': ['base', 'account'],
     'data': [
         'security/ir.model.access.csv',
-        'security/rules.xml'
+        'security/rules.xml',
+        'views/setup_pelanggan_views.xml'
     ],
     'installable': True,
     'application': True,
