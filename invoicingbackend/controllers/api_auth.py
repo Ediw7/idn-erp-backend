@@ -65,7 +65,7 @@ class AuthController(http.Controller):
 
         try:
             data = json.loads(request.httprequest.data.decode('utf-8'))
-            db = data.get('db', 'odoo_invoicing_idnerp')
+            db = data.get('db', 'ediaccounting')
             name = data.get('name')
             login = data.get('login')
             password = data.get('password')

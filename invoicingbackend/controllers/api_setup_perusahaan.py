@@ -1,10 +1,14 @@
 from odoo import http
 from odoo.http import request
+from .api_response import ApiResponse
+import json
 
 class ApiSetupPerusahaan(http.Controller):
 
-    @http.route('/api/setup/perusahaan/get', type='json', auth='user', methods=['POST'], cors='*')
+    @http.route('/api/setup/perusahaan/get', type='http', auth='user', methods=['GET', 'OPTIONS'], csrf=False, cors='*')
     def get_perusahaan(self, **kwargs):
+        if request.httprequest.method == 'OPTIONS':
+            return ApiResponse.success()
         try:
             # Retrieve the company (public user defaults to company 1)
             company = request.env.company
@@ -37,21 +41,23 @@ class ApiSetupPerusahaan(http.Controller):
                 'kode_klu': company.idn_kode_klu or '',
                 'wajib_ppnbm': company.idn_wajib_ppnbm or False
             }
-            return {'status': 'success', 'data': data}
+            return ApiResponse.success(data=data)
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}
+            return ApiResponse.error(message=str(e), status_code=500)
 
-    @http.route('/api/setup/perusahaan/save', type='json', auth='user', methods=['POST'], cors='*')
+    @http.route('/api/setup/perusahaan/save', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
     def save_perusahaan(self, **kw):
+        if request.httprequest.method == 'OPTIONS':
+            return ApiResponse.success()
         try:
-            data = kw
+            data = json.loads(request.httprequest.data.decode('utf-8'))
             company = request.env.company
             
             # Update company data securely
             update_vals = {}
             if 'name' in data:
                 if not data['name']:
-                    return {'status': 'error', 'message': 'Nama perusahaan tidak boleh kosong'}
+                    return ApiResponse.error(message='Nama perusahaan tidak boleh kosong', status_code=400)
                 update_vals['name'] = data['name']
             if 'street' in data: update_vals['street'] = data['street']
             if 'city' in data: update_vals['city'] = data['city']
@@ -81,6 +87,6 @@ class ApiSetupPerusahaan(http.Controller):
 
             company.sudo().write(update_vals)
             
-            return {'status': 'success', 'message': 'Data perusahaan berhasil diperbarui', 'id': company.id}
+            return ApiResponse.success(data={'id': company.id}, message='Data perusahaan berhasil diperbarui')
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}
+            return ApiResponse.error(message=str(e), status_code=500)

@@ -79,7 +79,7 @@
 
         <!-- Menus -->
         <!-- Main Menu for the App -->
-        <menuitem id="menu_invoicingbackend_root" name="IDN ERP Setup" sequence="10"/>
+        <menuitem id="menu_invoicingbackend_root" name="EDI Accounting Setup" sequence="10"/>
         
         <!-- Sub Menu -->
         <menuitem id="menu_setup_pelanggan" name="Pelanggan" parent="menu_invoicingbackend_root" action="action_setup_pelanggan" sequence="10"/>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_invoicingbackend" model="ir.ui.view">
+        <field name="name">res.company.form.invoicingbackend</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="EDI Accounting Setup" name="edi_accounting_setup">
+                    <group>
+                        <group string="Konfigurasi Tambahan">
+                            <field name="idn_fax"/>
+                            <field name="idn_maks_pelanggan"/>
+                            <field name="idn_periode_serial"/>
+                            <field name="idn_no_serial"/>
+                        </group>
+                        <group string="Legalitas Perpajakan">
+                            <field name="idn_nama_pkp"/>
+                            <field name="idn_kpp"/>
+                            <field name="idn_nppkp"/>
+                            <field name="idn_tgl_pengukuhan"/>
+                            <field name="idn_wajib_ppnbm"/>
+                            <field name="idn_kode_klu"/>
+                        </group>
+                        <group string="Alamat Wajib Pajak">
+                            <field name="idn_alamat_wp"/>
+                            <field name="idn_kota_wp"/>
+                            <field name="idn_kodepos_wp"/>
+                        </group>
+                        <group string="Tahun Buku">
+                            <field name="idn_tahun_buku_start"/>
+                            <field name="idn_tahun_buku_end"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
