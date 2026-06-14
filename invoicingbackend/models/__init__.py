@@ -21,3 +21,8 @@ from . import setup_bahasa
 from . import saldo_awal_piutang
 from . import sales_order
 from . import surat_jalan
+from . import nota_retur
+from . import nota_retur_pembelian
+from . import spt_masa_1111
+from . import surat_setoran_pajak
+from . import saldo_awal_inventory
