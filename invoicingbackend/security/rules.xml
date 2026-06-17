@@ -2,11 +2,26 @@
 <odoo>
     <data noupdate="1">
 
-        <record id="rule_invoicingbackend_preferensi_user" model="ir.rule">
-            <field name="name">invoicingbackend.preferensi User Rule</field>
+        <record id="rule_invoicingbackend_preferensi_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.preferensi User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_preferensi"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_preferensi_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.preferensi User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_preferensi"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_preferensi_admin" model="ir.rule">
@@ -16,11 +31,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_mata_uang_user" model="ir.rule">
-            <field name="name">invoicingbackend.mata_uang User Rule</field>
+        <record id="rule_invoicingbackend_mata_uang_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.mata_uang User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_mata_uang_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.mata_uang User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_mata_uang_admin" model="ir.rule">
@@ -30,11 +60,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_kurs_pajak_user" model="ir.rule">
-            <field name="name">invoicingbackend.kurs_pajak User Rule</field>
+        <record id="rule_invoicingbackend_kurs_pajak_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.kurs_pajak User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_kurs_pajak_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.kurs_pajak User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_kurs_pajak_admin" model="ir.rule">
@@ -44,11 +89,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_tanda_tangan_user" model="ir.rule">
-            <field name="name">invoicingbackend.tanda_tangan User Rule</field>
+        <record id="rule_invoicingbackend_tanda_tangan_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.tanda_tangan User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_tanda_tangan_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.tanda_tangan User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_tanda_tangan_admin" model="ir.rule">
@@ -58,11 +118,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_perkiraan_user" model="ir.rule">
-            <field name="name">invoicingbackend.perkiraan User Rule</field>
+        <record id="rule_invoicingbackend_perkiraan_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.perkiraan User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_perkiraan_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.perkiraan User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_perkiraan_admin" model="ir.rule">
@@ -72,11 +147,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_gudang_user" model="ir.rule">
-            <field name="name">invoicingbackend.gudang User Rule</field>
+        <record id="rule_invoicingbackend_gudang_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.gudang User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_gudang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_gudang_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.gudang User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_gudang"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_gudang_admin" model="ir.rule">
@@ -86,11 +176,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_group_barang_user" model="ir.rule">
-            <field name="name">invoicingbackend.group_barang User Rule</field>
+        <record id="rule_invoicingbackend_group_barang_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.group_barang User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_group_barang"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_group_barang_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.group_barang User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_group_barang"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_group_barang_admin" model="ir.rule">
@@ -100,11 +205,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_item_user" model="ir.rule">
-            <field name="name">invoicingbackend.item User Rule</field>
+        <record id="rule_invoicingbackend_item_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.item User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_item"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_item_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.item User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_item"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_item_admin" model="ir.rule">
@@ -114,11 +234,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_pembayaran_user" model="ir.rule">
-            <field name="name">invoicingbackend.pembayaran User Rule</field>
+        <record id="rule_invoicingbackend_pembayaran_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.pembayaran User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pembayaran_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.pembayaran User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_pembayaran_admin" model="ir.rule">
@@ -128,11 +263,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_pelanggan_user" model="ir.rule">
-            <field name="name">invoicingbackend.pelanggan User Rule</field>
+        <record id="rule_invoicingbackend_pelanggan_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.pelanggan User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_pelanggan_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.pelanggan User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_pelanggan_admin" model="ir.rule">
@@ -142,11 +292,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_supplier_user" model="ir.rule">
-            <field name="name">invoicingbackend.supplier User Rule</field>
+        <record id="rule_invoicingbackend_supplier_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.supplier User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_supplier"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_supplier_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.supplier User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_supplier"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_supplier_admin" model="ir.rule">
@@ -156,11 +321,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_proyek_user" model="ir.rule">
-            <field name="name">invoicingbackend.proyek User Rule</field>
+        <record id="rule_invoicingbackend_proyek_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.proyek User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_proyek"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_proyek_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.proyek User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_proyek"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_proyek_admin" model="ir.rule">
@@ -170,11 +350,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_salesman_user" model="ir.rule">
-            <field name="name">invoicingbackend.salesman User Rule</field>
+        <record id="rule_invoicingbackend_salesman_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.salesman User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_salesman"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_salesman_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.salesman User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_salesman"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_salesman_admin" model="ir.rule">
@@ -184,11 +379,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_potongan_user" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_potongan User Rule</field>
+        <record id="rule_invoicingbackend_jenis_potongan_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_potongan User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_potongan_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_potongan User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_potongan_admin" model="ir.rule">
@@ -198,11 +408,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_format_bukti_user" model="ir.rule">
-            <field name="name">invoicingbackend.format_bukti User Rule</field>
+        <record id="rule_invoicingbackend_format_bukti_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.format_bukti User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_format_bukti_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.format_bukti User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_format_bukti_admin" model="ir.rule">
@@ -212,11 +437,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_faktur_pajak_user" model="ir.rule">
-            <field name="name">invoicingbackend.faktur_pajak User Rule</field>
+        <record id="rule_invoicingbackend_faktur_pajak_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.faktur_pajak User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_faktur_pajak_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.faktur_pajak User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_faktur_pajak_admin" model="ir.rule">
@@ -226,11 +466,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_pajak_user" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_pajak User Rule</field>
+        <record id="rule_invoicingbackend_jenis_pajak_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_pajak User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_pajak_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_pajak User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_pajak_admin" model="ir.rule">
@@ -240,11 +495,26 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_setoran_user" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_setoran User Rule</field>
+        <record id="rule_invoicingbackend_jenis_setoran_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_setoran User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_jenis_setoran_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_setoran User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_setoran_admin" model="ir.rule">
@@ -254,31 +524,31 @@
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
 
-        <record id="rule_invoicingbackend_bahasa_user" model="ir.rule">
-            <field name="name">invoicingbackend.bahasa User Rule</field>
+        <record id="rule_invoicingbackend_bahasa_user_read" model="ir.rule">
+            <field name="name">invoicingbackend.bahasa User Read Rule</field>
+            <field name="model_id" ref="model_invoicingbackend_bahasa"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_invoicingbackend_bahasa_user_write" model="ir.rule">
+            <field name="name">invoicingbackend.bahasa User Write Rule</field>
             <field name="model_id" ref="model_invoicingbackend_bahasa"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_bahasa_admin" model="ir.rule">
             <field name="name">invoicingbackend.bahasa Admin Rule</field>
             <field name="model_id" ref="model_invoicingbackend_bahasa"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
-        </record>
-
-        <!-- Saldo Awal Piutang -->
-        <record id="rule_invoicingbackend_saldo_awal_piutang_user" model="ir.rule">
-            <field name="name">invoicingbackend.saldo_awal_piutang User Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        </record>
-
-        <record id="rule_invoicingbackend_saldo_awal_piutang_admin" model="ir.rule">
-            <field name="name">invoicingbackend.saldo_awal_piutang Admin Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
         </record>
