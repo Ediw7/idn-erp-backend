@@ -3,6 +3,7 @@ from odoo import models, fields
 class FakturPajak(models.Model):
     _name = 'invoicingbackend.faktur_pajak'
     _description = 'Setup Nomor Seri Faktur Pajak'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_surat = fields.Char(string='Nomor Surat dari KPP', required=True)
     tgl_surat = fields.Date(string='Tgl Surat', required=True)

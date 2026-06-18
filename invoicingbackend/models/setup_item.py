@@ -3,6 +3,7 @@ from odoo import models, fields
 class Item(models.Model):
     _name = 'invoicingbackend.item'
     _description = 'Setup Item'
+    _inherit = 'invoicingbackend.base_tenant'
 
     kode = fields.Char(string='Kode', required=True)
     nama = fields.Char(string='Nama Item', required=True)

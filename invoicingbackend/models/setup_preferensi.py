@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SetupPreferensi(models.Model):
     _name = 'invoicingbackend.preferensi'
     _description = 'Setup Preferensi Invoicing'
+    _inherit = 'invoicingbackend.base_tenant'
 
     # Sistem & Database
     folder_database = fields.Char(string="Folder Database", default="D:\\")

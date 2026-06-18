@@ -52,6 +52,7 @@ class ApiSaldoAwalPiutang(http.Controller):
                 'saldo_invoice': float(data.get('saldo_invoice', 0.0) or 0.0),
                 'is_paid': data.get('is_paid', False)
             }
+            val['company_id'] = request.env.user.company_id.id
             new_record = request.env['invoicingbackend.saldo_awal_piutang'].create(val)
             return ApiResponse.success(message='Data berhasil disimpan', data={'id': new_record.id})
         except Exception as e:

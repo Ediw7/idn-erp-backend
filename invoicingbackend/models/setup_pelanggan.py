@@ -3,6 +3,7 @@ from odoo import models, fields
 class Pelanggan(models.Model):
     _name = 'invoicingbackend.pelanggan'
     _description = 'Setup Pelanggan'
+    _inherit = 'invoicingbackend.base_tenant'
 
     kode = fields.Char(string='Kode Pelanggan', required=True)
     is_ekspor = fields.Boolean(string='Ekspor', default=False)

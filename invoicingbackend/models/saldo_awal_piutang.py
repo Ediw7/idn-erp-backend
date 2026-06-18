@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SaldoAwalPiutang(models.Model):
     _name = 'invoicingbackend.saldo_awal_piutang'
     _description = 'Saldo Awal Piutang'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_invoice = fields.Char(string='No. Invoice', required=True)
     tanggal = fields.Date(string='Tanggal', required=True)

@@ -92,6 +92,7 @@ class ApiSptMasa1111(http.Controller):
                 record.write(val)
                 res_id = record.id
             else:
+                val['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.spt_masa_1111'].create(val)
                 res_id = record.id
                 

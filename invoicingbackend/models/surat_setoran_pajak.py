@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SuratSetoranPajak(models.Model):
     _name = 'invoicingbackend.surat_setoran_pajak'
     _description = 'Surat Setoran Pajak'
+    _inherit = 'invoicingbackend.base_tenant'
 
     kpp = fields.Char(string="KPP")
     nama_wp = fields.Char(string="Nama WP")

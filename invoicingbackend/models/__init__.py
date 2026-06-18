@@ -1,3 +1,4 @@
+from . import base_tenant
 from . import setup_perusahaan
 from . import setup_preferensi
 from . import setup_mata_uang

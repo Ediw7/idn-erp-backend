@@ -10,8 +10,8 @@ class ApiSetupPerusahaan(http.Controller):
         if request.httprequest.method == 'OPTIONS':
             return ApiResponse.success()
         try:
-            # Retrieve the company (public user defaults to company 1)
-            company = request.env.company
+            # Gunakan company_id bawaan user (Tenant yang melekat) alih-alih env.company
+            company = request.env.user.company_id
             
             data = {
                 'id': company.id,
@@ -51,7 +51,7 @@ class ApiSetupPerusahaan(http.Controller):
             return ApiResponse.success()
         try:
             data = json.loads(request.httprequest.data.decode('utf-8'))
-            company = request.env.company
+            company = request.env.user.company_id
             
             # Update company data securely
             update_vals = {}
@@ -85,7 +85,7 @@ class ApiSetupPerusahaan(http.Controller):
             if 'kode_klu' in data: update_vals['idn_kode_klu'] = data['kode_klu']
             if 'wajib_ppnbm' in data: update_vals['idn_wajib_ppnbm'] = data['wajib_ppnbm']
 
-            company.sudo().write(update_vals)
+            company.write(update_vals)
             
             return ApiResponse.success(data={'id': company.id}, message='Data perusahaan berhasil diperbarui')
         except Exception as e:

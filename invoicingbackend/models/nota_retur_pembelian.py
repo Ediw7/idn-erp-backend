@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class NotaReturPembelian(models.Model):
     _name = 'invoicingbackend.nota_retur_pembelian'
     _description = 'Nota Retur Pembelian'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_nota = fields.Char(string="No Nota Retur")
     tgl_nota = fields.Date(string="Tgl Nota Retur")
@@ -26,6 +27,7 @@ class NotaReturPembelian(models.Model):
 class NotaReturPembelianLine(models.Model):
     _name = 'invoicingbackend.nota_retur_pembelian_line'
     _description = 'Nota Retur Pembelian Line'
+    _inherit = 'invoicingbackend.base_tenant'
 
     nota_id = fields.Many2one('invoicingbackend.nota_retur_pembelian', string="Nota Retur", ondelete='cascade')
     item_id = fields.Many2one('invoicingbackend.setup_item', string="Item")

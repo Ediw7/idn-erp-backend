@@ -3,6 +3,7 @@ from odoo import models, fields
 class Perkiraan(models.Model):
     _name = 'invoicingbackend.perkiraan'
     _description = 'Setup Perkiraan'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_perkiraan = fields.Char(string='No Perkiraan', required=True)
     nama_perkiraan = fields.Char(string='Nama Perkiraan', required=True)

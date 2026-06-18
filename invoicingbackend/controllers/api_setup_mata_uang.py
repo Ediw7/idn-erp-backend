@@ -38,6 +38,7 @@ class ApiSetupMataUang(http.Controller):
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.mata_uang'].create(vals)
                 
             return {'status': 'success', 'message': 'Mata Uang berhasil disimpan', 'id': record.id}

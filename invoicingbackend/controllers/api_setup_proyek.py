@@ -36,6 +36,7 @@ class ApiSetupProyek(http.Controller):
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.proyek'].create(vals)
                 
             return {'status': 'success', 'message': 'Proyek berhasil disimpan', 'id': record.id}

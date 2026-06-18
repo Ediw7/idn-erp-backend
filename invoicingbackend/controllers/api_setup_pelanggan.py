@@ -82,6 +82,7 @@ class ApiSetupPelanggan(http.Controller):
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.pelanggan'].create(vals)
                 
             return {'status': 'success', 'message': 'Pelanggan berhasil disimpan', 'id': record.id}

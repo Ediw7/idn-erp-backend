@@ -72,6 +72,7 @@ class ApiSaldoAwalInventory(http.Controller):
                 record = request.env['invoicingbackend.saldo_awal_inventory'].browse(record_id)
                 record.write(vals)
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.saldo_awal_inventory'].create(vals)
                 
             return {'status': 'success', 'message': 'Data berhasil disimpan', 'id': record.id}

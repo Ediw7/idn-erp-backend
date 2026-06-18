@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SalesOrder(models.Model):
     _name = 'invoicingbackend.sales_order'
     _description = 'Sales Order'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_so = fields.Char(string='No. Sales Order', required=True)
     tgl_so = fields.Date(string='Tgl Sales Order', required=True, default=fields.Date.context_today)
@@ -46,6 +47,7 @@ class SalesOrder(models.Model):
 class SalesOrderLine(models.Model):
     _name = 'invoicingbackend.sales_order_line'
     _description = 'Sales Order Line'
+    _inherit = 'invoicingbackend.base_tenant'
 
     so_id = fields.Many2one('invoicingbackend.sales_order', string='Sales Order', ondelete='cascade')
     item_id = fields.Many2one('invoicingbackend.item', string='Kode Barang', required=True)

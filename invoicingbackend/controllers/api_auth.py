@@ -79,9 +79,9 @@ class AuthController(http.Controller):
             registry = odoo.registry(db)
             with registry.cursor() as cr:
                 env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                existing_user = env['res.users'].search([('login', '=', login)])
+                existing_user = env['res.users'].with_context(active_test=False).search([('login', '=ilike', login)])
                 if existing_user:
-                    return Response(json.dumps({'error': 'User already exists'}), status=400, content_type='application/json')
+                    return Response(json.dumps({'error': f'User dengan email {login} sudah terdaftar di sistem.'}), status=400, content_type='application/json')
                 
                 # --- TRANSAKSI ATOMIK MULTI-TENANT ---
                 # 1. Bikin Ruang Perusahaan (Tenant)
@@ -150,6 +150,126 @@ class AuthController(http.Controller):
             if user_record.exists():
                 user_record.active = not user_record.active
                 return Response(json.dumps({'status': 'success', 'message': 'Status user berhasil diubah'}), status=200, content_type='application/json')
+            else:
+                return Response(json.dumps({'error': 'User tidak ditemukan'}), status=404, content_type='application/json')
+        except Exception as e:
+            return Response(json.dumps({'error': str(e)}), status=500, content_type='application/json')
+
+    @http.route('/api/auth/users/create', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
+    def create_user(self, **kwargs):
+        if request.httprequest.method == 'OPTIONS':
+            return Response(status=200)
+            
+        try:
+            if not request.env.user.has_group('base.group_erp_manager'):
+                return Response(json.dumps({'error': 'Access Denied'}), status=403, content_type='application/json')
+            
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            name = data.get('name')
+            login = data.get('login')
+            password = data.get('password')
+            company_name = data.get('company_name')
+            is_admin = data.get('is_admin', False)
+            
+            if not name or not login or not password:
+                return Response(json.dumps({'error': 'Missing name, login, or password'}), status=400, content_type='application/json')
+                
+            existing_user = request.env['res.users'].sudo().with_context(active_test=False).search([('login', '=ilike', login)], limit=1)
+            
+            # Handle Company
+            company_id = request.env.user.company_id.id
+            if company_name:
+                existing_company = request.env['res.company'].sudo().search([('name', '=ilike', company_name)], limit=1)
+                if existing_company:
+                    company_id = existing_company.id
+                else:
+                    new_company = request.env['res.company'].sudo().create({'name': company_name})
+                    company_id = new_company.id
+
+            group_id = request.env.ref('base.group_erp_manager').id if is_admin else request.env.ref('base.group_user').id
+            
+            if existing_user:
+                if existing_user.active:
+                    return Response(json.dumps({'error': f'User dengan email {login} sudah aktif terdaftar di sistem.'}), status=400, content_type='application/json')
+                else:
+                    # Restore archived user
+                    existing_user.write({
+                        'active': True,
+                        'name': name,
+                        'password': password,
+                        'company_id': company_id,
+                        'company_ids': [(4, company_id)],
+                        'groups_id': [(6, 0, [group_id])]
+                    })
+                    return Response(json.dumps({'status': 'success', 'message': 'User lama yang terhapus berhasil dipulihkan', 'id': existing_user.id}), status=200, content_type='application/json')
+
+            new_user = request.env['res.users'].sudo().create({
+                'name': name,
+                'login': login,
+                'password': password,
+                'company_id': company_id,
+                'company_ids': [(4, company_id)],
+                'groups_id': [(6, 0, [group_id])]
+            })
+            
+            return Response(json.dumps({'status': 'success', 'message': 'User berhasil dibuat', 'id': new_user.id}), status=200, content_type='application/json')
+        except Exception as e:
+            return Response(json.dumps({'error': str(e)}), status=500, content_type='application/json')
+
+    @http.route('/api/auth/users/update', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
+    def update_user(self, **kwargs):
+        if request.httprequest.method == 'OPTIONS':
+            return Response(status=200)
+            
+        try:
+            if not request.env.user.has_group('base.group_erp_manager'):
+                return Response(json.dumps({'error': 'Access Denied'}), status=403, content_type='application/json')
+            
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            user_id = data.get('id')
+            if not user_id:
+                return Response(json.dumps({'error': 'Missing user ID'}), status=400, content_type='application/json')
+                
+            user_record = request.env['res.users'].sudo().browse(user_id)
+            if not user_record.exists():
+                return Response(json.dumps({'error': 'User tidak ditemukan'}), status=404, content_type='application/json')
+            
+            update_vals = {}
+            if data.get('name'):
+                update_vals['name'] = data['name']
+            if data.get('login'):
+                update_vals['login'] = data['login']
+            if data.get('password'):
+                update_vals['password'] = data['password']
+            
+            if update_vals:
+                user_record.write(update_vals)
+            
+            return Response(json.dumps({'status': 'success', 'message': 'User berhasil diperbarui'}), status=200, content_type='application/json')
+        except Exception as e:
+            return Response(json.dumps({'error': str(e)}), status=500, content_type='application/json')
+
+    @http.route('/api/auth/users/delete', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
+    def delete_user(self, **kwargs):
+        if request.httprequest.method == 'OPTIONS':
+            return Response(status=200)
+            
+        try:
+            if not request.env.user.has_group('base.group_erp_manager'):
+                return Response(json.dumps({'error': 'Access Denied'}), status=403, content_type='application/json')
+            
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            user_id = data.get('id')
+            if not user_id:
+                return Response(json.dumps({'error': 'Missing user ID'}), status=400, content_type='application/json')
+            
+            if user_id == request.env.user.id:
+                return Response(json.dumps({'error': 'Tidak bisa menghapus akun sendiri'}), status=400, content_type='application/json')
+                
+            user_record = request.env['res.users'].sudo().browse(user_id)
+            if user_record.exists():
+                user_record.active = False  # Soft delete (archive) for safety
+                return Response(json.dumps({'status': 'success', 'message': 'User berhasil dihapus'}), status=200, content_type='application/json')
             else:
                 return Response(json.dumps({'error': 'User tidak ditemukan'}), status=404, content_type='application/json')
         except Exception as e:

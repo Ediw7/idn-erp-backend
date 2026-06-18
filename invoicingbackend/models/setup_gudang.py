@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class Gudang(models.Model):
     _name = 'invoicingbackend.gudang'
     _description = 'Setup Gudang'
+    _inherit = 'invoicingbackend.base_tenant'
 
     kode_gudang = fields.Char(string='Kode Gudang', required=True)
     nama_gudang = fields.Char(string='Nama Gudang', required=True)

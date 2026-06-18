@@ -40,6 +40,7 @@ class ApiSetupBahasa(http.Controller):
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.bahasa'].create(vals)
                 
             return {'status': 'success', 'message': 'Setup Bahasa berhasil disimpan', 'id': record.id}

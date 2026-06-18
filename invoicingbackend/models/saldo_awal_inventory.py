@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SaldoAwalInventory(models.Model):
     _name = 'invoicingbackend.saldo_awal_inventory'
     _description = 'Saldo Awal Persediaan'
+    _inherit = 'invoicingbackend.base_tenant'
 
     gudang_id = fields.Many2one('invoicingbackend.gudang', string='Gudang', required=True)
     tanggal = fields.Date(string='Tanggal', required=True)
@@ -13,6 +14,7 @@ class SaldoAwalInventory(models.Model):
 class SaldoAwalInventoryLine(models.Model):
     _name = 'invoicingbackend.saldo_awal_inventory_line'
     _description = 'Detail Saldo Awal Persediaan'
+    _inherit = 'invoicingbackend.base_tenant'
 
     saldo_awal_id = fields.Many2one('invoicingbackend.saldo_awal_inventory', string='Saldo Awal', ondelete='cascade')
     item_id = fields.Many2one('invoicingbackend.item', string='Item', required=True)

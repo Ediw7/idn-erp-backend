@@ -3,6 +3,7 @@ from odoo import models, fields
 class FormatBukti(models.Model):
     _name = 'invoicingbackend.format_bukti'
     _description = 'Setup Format No Bukti'
+    _inherit = 'invoicingbackend.base_tenant'
 
     periode = fields.Char(string='Periode (yyyymm)', required=True)
 

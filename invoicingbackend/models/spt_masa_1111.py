@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SptMasa1111(models.Model):
     _name = 'invoicingbackend.spt_masa_1111'
     _description = 'SPT Masa PPN 1111'
+    _inherit = 'invoicingbackend.base_tenant'
 
     tahun = fields.Char(string="Tahun", default="2020")
     masa_awal = fields.Selection([

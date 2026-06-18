@@ -1,556 +1,741 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
 
-        <record id="rule_invoicingbackend_preferensi_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.preferensi User Read Rule</field>
+        <!-- ===== PREFERENSI ===== -->
+        <record id="rule_invoicingbackend_preferensi_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.preferensi Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_preferensi"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_preferensi_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.preferensi User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_preferensi"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_preferensi_admin" model="ir.rule">
-            <field name="name">invoicingbackend.preferensi Admin Rule</field>
+            <field name="name">invoicingbackend.preferensi Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_preferensi"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_mata_uang_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.mata_uang User Read Rule</field>
+        <!-- ===== MATA_UANG ===== -->
+        <record id="rule_invoicingbackend_mata_uang_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.mata_uang Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_mata_uang_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.mata_uang User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_mata_uang_admin" model="ir.rule">
-            <field name="name">invoicingbackend.mata_uang Admin Rule</field>
+            <field name="name">invoicingbackend.mata_uang Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_mata_uang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_kurs_pajak_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.kurs_pajak User Read Rule</field>
+        <!-- ===== KURS_PAJAK ===== -->
+        <record id="rule_invoicingbackend_kurs_pajak_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.kurs_pajak Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_kurs_pajak_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.kurs_pajak User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_kurs_pajak_admin" model="ir.rule">
-            <field name="name">invoicingbackend.kurs_pajak Admin Rule</field>
+            <field name="name">invoicingbackend.kurs_pajak Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_kurs_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_tanda_tangan_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.tanda_tangan User Read Rule</field>
+        <!-- ===== TANDA_TANGAN ===== -->
+        <record id="rule_invoicingbackend_tanda_tangan_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.tanda_tangan Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_tanda_tangan_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.tanda_tangan User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_tanda_tangan_admin" model="ir.rule">
-            <field name="name">invoicingbackend.tanda_tangan Admin Rule</field>
+            <field name="name">invoicingbackend.tanda_tangan Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_tanda_tangan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_perkiraan_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.perkiraan User Read Rule</field>
+        <!-- ===== PERKIRAAN ===== -->
+        <record id="rule_invoicingbackend_perkiraan_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.perkiraan Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_perkiraan_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.perkiraan User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_perkiraan_admin" model="ir.rule">
-            <field name="name">invoicingbackend.perkiraan Admin Rule</field>
+            <field name="name">invoicingbackend.perkiraan Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_perkiraan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_gudang_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.gudang User Read Rule</field>
+        <!-- ===== GUDANG ===== -->
+        <record id="rule_invoicingbackend_gudang_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.gudang Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_gudang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_gudang_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.gudang User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_gudang"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_gudang_admin" model="ir.rule">
-            <field name="name">invoicingbackend.gudang Admin Rule</field>
+            <field name="name">invoicingbackend.gudang Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_gudang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_group_barang_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.group_barang User Read Rule</field>
+        <!-- ===== GROUP_BARANG ===== -->
+        <record id="rule_invoicingbackend_group_barang_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.group_barang Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_group_barang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_group_barang_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.group_barang User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_group_barang"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_group_barang_admin" model="ir.rule">
-            <field name="name">invoicingbackend.group_barang Admin Rule</field>
+            <field name="name">invoicingbackend.group_barang Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_group_barang"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_item_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.item User Read Rule</field>
+        <!-- ===== ITEM ===== -->
+        <record id="rule_invoicingbackend_item_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.item Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_item"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_item_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.item User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_item"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_item_admin" model="ir.rule">
-            <field name="name">invoicingbackend.item Admin Rule</field>
+            <field name="name">invoicingbackend.item Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_item"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_pembayaran_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.pembayaran User Read Rule</field>
+        <!-- ===== PEMBAYARAN ===== -->
+        <record id="rule_invoicingbackend_pembayaran_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.pembayaran Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_pembayaran_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.pembayaran User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_pembayaran_admin" model="ir.rule">
-            <field name="name">invoicingbackend.pembayaran Admin Rule</field>
+            <field name="name">invoicingbackend.pembayaran Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_pembayaran"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_pelanggan_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.pelanggan User Read Rule</field>
+        <!-- ===== PELANGGAN ===== -->
+        <record id="rule_invoicingbackend_pelanggan_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.pelanggan Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_pelanggan_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.pelanggan User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_pelanggan_admin" model="ir.rule">
-            <field name="name">invoicingbackend.pelanggan Admin Rule</field>
+            <field name="name">invoicingbackend.pelanggan Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_pelanggan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_supplier_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.supplier User Read Rule</field>
+        <!-- ===== SUPPLIER ===== -->
+        <record id="rule_invoicingbackend_supplier_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.supplier Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_supplier"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_supplier_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.supplier User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_supplier"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_supplier_admin" model="ir.rule">
-            <field name="name">invoicingbackend.supplier Admin Rule</field>
+            <field name="name">invoicingbackend.supplier Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_supplier"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_proyek_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.proyek User Read Rule</field>
+        <!-- ===== PROYEK ===== -->
+        <record id="rule_invoicingbackend_proyek_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.proyek Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_proyek"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_proyek_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.proyek User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_proyek"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_proyek_admin" model="ir.rule">
-            <field name="name">invoicingbackend.proyek Admin Rule</field>
+            <field name="name">invoicingbackend.proyek Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_proyek"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_salesman_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.salesman User Read Rule</field>
+        <!-- ===== SALESMAN ===== -->
+        <record id="rule_invoicingbackend_salesman_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.salesman Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_salesman"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_salesman_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.salesman User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_salesman"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_salesman_admin" model="ir.rule">
-            <field name="name">invoicingbackend.salesman Admin Rule</field>
+            <field name="name">invoicingbackend.salesman Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_salesman"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_potongan_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_potongan User Read Rule</field>
+        <!-- ===== JENIS_POTONGAN ===== -->
+        <record id="rule_invoicingbackend_jenis_potongan_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_potongan Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_jenis_potongan_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_potongan User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_potongan_admin" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_potongan Admin Rule</field>
+            <field name="name">invoicingbackend.jenis_potongan Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_potongan"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_format_bukti_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.format_bukti User Read Rule</field>
+        <!-- ===== FORMAT_BUKTI ===== -->
+        <record id="rule_invoicingbackend_format_bukti_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.format_bukti Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_format_bukti_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.format_bukti User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_format_bukti_admin" model="ir.rule">
-            <field name="name">invoicingbackend.format_bukti Admin Rule</field>
+            <field name="name">invoicingbackend.format_bukti Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_format_bukti"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_faktur_pajak_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.faktur_pajak User Read Rule</field>
+        <!-- ===== FAKTUR_PAJAK ===== -->
+        <record id="rule_invoicingbackend_faktur_pajak_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.faktur_pajak Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_faktur_pajak_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.faktur_pajak User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_faktur_pajak_admin" model="ir.rule">
-            <field name="name">invoicingbackend.faktur_pajak Admin Rule</field>
+            <field name="name">invoicingbackend.faktur_pajak Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_faktur_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_pajak_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_pajak User Read Rule</field>
+        <!-- ===== JENIS_PAJAK ===== -->
+        <record id="rule_invoicingbackend_jenis_pajak_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_pajak Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_jenis_pajak_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_pajak User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_pajak_admin" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_pajak Admin Rule</field>
+            <field name="name">invoicingbackend.jenis_pajak Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_pajak"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_jenis_setoran_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_setoran User Read Rule</field>
+        <!-- ===== JENIS_SETORAN ===== -->
+        <record id="rule_invoicingbackend_jenis_setoran_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.jenis_setoran Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_jenis_setoran_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_setoran User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_jenis_setoran_admin" model="ir.rule">
-            <field name="name">invoicingbackend.jenis_setoran Admin Rule</field>
+            <field name="name">invoicingbackend.jenis_setoran Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_jenis_setoran"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_invoicingbackend_bahasa_user_read" model="ir.rule">
-            <field name="name">invoicingbackend.bahasa User Read Rule</field>
+        <!-- ===== BAHASA ===== -->
+        <record id="rule_invoicingbackend_bahasa_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.bahasa Multi-Company Isolation</field>
             <field name="model_id" ref="model_invoicingbackend_bahasa"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_invoicingbackend_bahasa_user_write" model="ir.rule">
-            <field name="name">invoicingbackend.bahasa User Write Rule</field>
-            <field name="model_id" ref="model_invoicingbackend_bahasa"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="rule_invoicingbackend_bahasa_admin" model="ir.rule">
-            <field name="name">invoicingbackend.bahasa Admin Rule</field>
+            <field name="name">invoicingbackend.bahasa Admin Bypass</field>
             <field name="model_id" ref="model_invoicingbackend_bahasa"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SALES_ORDER ===== -->
+        <record id="rule_invoicingbackend_sales_order_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.sales_order Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_sales_order"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_sales_order_admin" model="ir.rule">
+            <field name="name">invoicingbackend.sales_order Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_sales_order"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SALES_ORDER_LINE ===== -->
+        <record id="rule_invoicingbackend_sales_order_line_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.sales_order_line Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_sales_order_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_sales_order_line_admin" model="ir.rule">
+            <field name="name">invoicingbackend.sales_order_line Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_sales_order_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SALDO_AWAL_PIUTANG ===== -->
+        <record id="rule_invoicingbackend_saldo_awal_piutang_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_piutang Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_saldo_awal_piutang_admin" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_piutang Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_piutang"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SALDO_AWAL_INVENTORY ===== -->
+        <record id="rule_invoicingbackend_saldo_awal_inventory_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_inventory Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_inventory"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_saldo_awal_inventory_admin" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_inventory Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_inventory"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SALDO_AWAL_INVENTORY_LINE ===== -->
+        <record id="rule_invoicingbackend_saldo_awal_inventory_line_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_inventory_line Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_inventory_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_saldo_awal_inventory_line_admin" model="ir.rule">
+            <field name="name">invoicingbackend.saldo_awal_inventory_line Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_saldo_awal_inventory_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== NOTA_RETUR ===== -->
+        <record id="rule_invoicingbackend_nota_retur_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_nota_retur_admin" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== NOTA_RETUR_LINE ===== -->
+        <record id="rule_invoicingbackend_nota_retur_line_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_line Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_nota_retur_line_admin" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_line Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== NOTA_RETUR_PEMBELIAN ===== -->
+        <record id="rule_invoicingbackend_nota_retur_pembelian_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_pembelian Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_pembelian"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_nota_retur_pembelian_admin" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_pembelian Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_pembelian"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== NOTA_RETUR_PEMBELIAN_LINE ===== -->
+        <record id="rule_invoicingbackend_nota_retur_pembelian_line_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_pembelian_line Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_pembelian_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_nota_retur_pembelian_line_admin" model="ir.rule">
+            <field name="name">invoicingbackend.nota_retur_pembelian_line Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_nota_retur_pembelian_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SURAT_JALAN ===== -->
+        <record id="rule_invoicingbackend_surat_jalan_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.surat_jalan Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_jalan"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_surat_jalan_admin" model="ir.rule">
+            <field name="name">invoicingbackend.surat_jalan Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_jalan"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SURAT_JALAN_LINE ===== -->
+        <record id="rule_invoicingbackend_surat_jalan_line_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.surat_jalan_line Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_jalan_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_surat_jalan_line_admin" model="ir.rule">
+            <field name="name">invoicingbackend.surat_jalan_line Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_jalan_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SPT_MASA_1111 ===== -->
+        <record id="rule_invoicingbackend_spt_masa_1111_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.spt_masa_1111 Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_spt_masa_1111"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_spt_masa_1111_admin" model="ir.rule">
+            <field name="name">invoicingbackend.spt_masa_1111 Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_spt_masa_1111"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ===== SURAT_SETORAN_PAJAK ===== -->
+        <record id="rule_invoicingbackend_surat_setoran_pajak_multi_company" model="ir.rule">
+            <field name="name">invoicingbackend.surat_setoran_pajak Multi-Company Isolation</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_setoran_pajak"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_invoicingbackend_surat_setoran_pajak_admin" model="ir.rule">
+            <field name="name">invoicingbackend.surat_setoran_pajak Admin Bypass</field>
+            <field name="model_id" ref="model_invoicingbackend_surat_setoran_pajak"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
     </data>
 </odoo>

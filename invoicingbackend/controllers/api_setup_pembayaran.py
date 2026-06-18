@@ -38,6 +38,7 @@ class ApiSetupPembayaran(http.Controller):
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
             else:
+                vals['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.pembayaran'].create(vals)
                 
             return {'status': 'success', 'message': 'Cara Pembayaran berhasil disimpan', 'id': record.id}

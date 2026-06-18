@@ -66,6 +66,7 @@ class ApiSuratSetoranPajak(http.Controller):
                 record.write(val)
                 res_id = record.id
             else:
+                val['company_id'] = request.env.user.company_id.id
                 record = request.env['invoicingbackend.surat_setoran_pajak'].create(val)
                 res_id = record.id
                 

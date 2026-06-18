@@ -3,6 +3,7 @@ from odoo import models, fields, api
 class SuratJalan(models.Model):
     _name = 'invoicingbackend.surat_jalan'
     _description = 'Surat Jalan'
+    _inherit = 'invoicingbackend.base_tenant'
 
     no_sj = fields.Char(string='No Surat Jalan', required=True)
     tgl_sj = fields.Date(string='Tanggal', required=True, default=fields.Date.context_today)
@@ -21,6 +22,7 @@ class SuratJalan(models.Model):
 class SuratJalanLine(models.Model):
     _name = 'invoicingbackend.surat_jalan_line'
     _description = 'Surat Jalan Line'
+    _inherit = 'invoicingbackend.base_tenant'
 
     sj_id = fields.Many2one('invoicingbackend.surat_jalan', string='Surat Jalan', ondelete='cascade')
     item_id = fields.Many2one('invoicingbackend.item', string='Kode Barang', required=True)

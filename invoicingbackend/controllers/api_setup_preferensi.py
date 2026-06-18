@@ -59,6 +59,7 @@ class ApiSetupPreferensi(http.Controller):
             }
             
             if not pref:
+                update_vals['company_id'] = request.env.user.company_id.id
                 request.env['invoicingbackend.preferensi'].create(update_vals)
             else:
                 pref.write(update_vals)
