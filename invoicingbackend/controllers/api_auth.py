@@ -45,7 +45,8 @@ class AuthController(http.Controller):
                     'user': {
                         'name': user.name,
                         'email': user.login,
-                        'is_admin': user.has_group('base.group_erp_manager')
+                        'is_admin': user.has_group('base.group_erp_manager'),
+                        'company_name': user.company_id.name if user.company_id else 'PT. EDI Accounting System'
                     }
                 }),
                 status=200,
@@ -67,11 +68,12 @@ class AuthController(http.Controller):
             data = json.loads(request.httprequest.data.decode('utf-8'))
             db = data.get('db', 'ediaccounting')
             name = data.get('name')
+            company_name = data.get('company_name')
             login = data.get('login')
             password = data.get('password')
 
-            if not name or not login or not password:
-                return Response(json.dumps({'error': 'Missing name, login, or password'}), status=400, content_type='application/json')
+            if not name or not company_name or not login or not password:
+                return Response(json.dumps({'error': 'Missing name, company_name, login, or password'}), status=400, content_type='application/json')
 
             import odoo
             registry = odoo.registry(db)
@@ -81,11 +83,20 @@ class AuthController(http.Controller):
                 if existing_user:
                     return Response(json.dumps({'error': 'User already exists'}), status=400, content_type='application/json')
                 
+                # --- TRANSAKSI ATOMIK MULTI-TENANT ---
+                # 1. Bikin Ruang Perusahaan (Tenant)
+                new_company = env['res.company'].create({
+                    'name': company_name,
+                })
+                
+                # 2. Bikin Akun User & Ikatkan ke Tenant
                 group_user = env.ref('base.group_user')
                 new_user = env['res.users'].create({
                     'name': name,
                     'login': login,
                     'password': password,
+                    'company_id': new_company.id,
+                    'company_ids': [(4, new_company.id)],
                     'groups_id': [(6, 0, [group_user.id])]
                 })
                 uid = new_user.id
