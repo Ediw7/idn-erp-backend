@@ -15,7 +15,7 @@
                             <field name="idn_no_serial"/>
                         </group>
                         <group string="Legalitas Perpajakan">
-                            <field name="idn_nama_pkp"/>
+                            <field name="idn_nama_pkf"/>
                             <field name="idn_kpp"/>
                             <field name="idn_nppkp"/>
                             <field name="idn_tgl_pengukuhan"/>

@@ -29,7 +29,7 @@ class ApiSetupPerusahaan(http.Controller):
                 'no_serial': company.idn_no_serial or '',
                 'npwp': company.l10n_id_npwp or '',
                 'nitku': company.l10n_id_nitku or '',
-                'nama_pkp': company.idn_nama_pkp or '',
+                'nama_pkf': company.idn_nama_pkf or '',
                 'kpp': company.idn_kpp or '',
                 'nppkp': company.idn_nppkp or '',
                 'tgl_pengukuhan': str(company.idn_tgl_pengukuhan) if company.idn_tgl_pengukuhan else '',
@@ -73,7 +73,7 @@ class ApiSetupPerusahaan(http.Controller):
             
             if 'npwp' in data: update_vals['l10n_id_npwp'] = data['npwp']
             if 'nitku' in data: update_vals['l10n_id_nitku'] = data['nitku']
-            if 'nama_pkp' in data: update_vals['idn_nama_pkp'] = data['nama_pkp']
+            if 'nama_pkf' in data: update_vals['idn_nama_pkf'] = data['nama_pkf']
             if 'kpp' in data: update_vals['idn_kpp'] = data['kpp']
             if 'nppkp' in data: update_vals['idn_nppkp'] = data['nppkp']
             if 'tgl_pengukuhan' in data and data['tgl_pengukuhan']: update_vals['idn_tgl_pengukuhan'] = data['tgl_pengukuhan']

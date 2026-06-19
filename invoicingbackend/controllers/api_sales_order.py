@@ -67,6 +67,8 @@ class ApiSalesOrder(http.Controller):
                     'potongan_harga': rec.potongan_harga,
                     'ppn_persen': rec.ppn_persen,
                     'ppn_amount': rec.ppn_amount,
+                    'ppnbm_persen': rec.ppnbm_persen,
+                    'ppnbm_amount': rec.ppnbm_amount,
                     'ongkos_angkut': rec.ongkos_angkut,
                     'total': rec.total,
                     'create_date': rec.create_date.strftime('%m/%d/%Y %I:%M:%S %p') if rec.create_date else '',
@@ -102,6 +104,7 @@ class ApiSalesOrder(http.Controller):
                 'keterangan': params.get('keterangan', ''),
                 'potongan_harga': float(params.get('potongan_harga', 0)),
                 'ppn_persen': float(params.get('ppn_persen', 10.0)),
+                'ppnbm_persen': float(params.get('ppnbm_persen', 0.0)),
                 'ongkos_angkut': float(params.get('ongkos_angkut', 0)),
             }
 

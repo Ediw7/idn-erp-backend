@@ -17,7 +17,7 @@ class ResCompanyExt(models.Model):
     l10n_id_npwp = fields.Char(string='NPWP Perusahaan', size=25, help="Nomor Pokok Wajib Pajak")
     l10n_id_nitku = fields.Char(string='NITKU', size=22, help='Nomor Identitas Tempat Kegiatan Usaha')
     
-    idn_nama_pkp = fields.Char(string='Nama PKP')
+    idn_nama_pkf = fields.Char(string='Nama PKF')
     idn_kpp = fields.Char(string='KPP')
     idn_nppkp = fields.Char(string='NPPKP')
     idn_tgl_pengukuhan = fields.Date(string='Tgl Pengukuhan')

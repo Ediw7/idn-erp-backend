@@ -27,12 +27,14 @@ class SalesOrder(models.Model):
     potongan_harga = fields.Float(string='Potongan Harga')
     ppn_persen = fields.Float(string='PPN (%)', default=10.0)
     ppn_amount = fields.Float(string='PPN Amount', compute='_compute_totals', store=True)
+    ppnbm_persen = fields.Float(string='PPnBM (%)', default=0.0)
+    ppnbm_amount = fields.Float(string='PPnBM Amount', compute='_compute_totals', store=True)
     ongkos_angkut = fields.Float(string='Ongkos Angkut')
     total = fields.Float(string='Total', compute='_compute_totals', store=True)
     
     line_ids = fields.One2many('invoicingbackend.sales_order_line', 'so_id', string='Detail Barang/Jasa')
 
-    @api.depends('line_ids.harga_jual', 'potongan_harga', 'ppn_persen', 'ongkos_angkut')
+    @api.depends('line_ids.harga_jual', 'potongan_harga', 'ppn_persen', 'ppnbm_persen', 'ongkos_angkut')
     def _compute_totals(self):
         for record in self:
             subtotal = sum(line.harga_jual for line in record.line_ids)
@@ -40,9 +42,11 @@ class SalesOrder(models.Model):
             
             dpp = subtotal - record.potongan_harga
             ppn_amt = dpp * (record.ppn_persen / 100.0)
+            ppnbm_amt = dpp * (record.ppnbm_persen / 100.0)
             record.ppn_amount = ppn_amt
+            record.ppnbm_amount = ppnbm_amt
             
-            record.total = dpp + ppn_amt + record.ongkos_angkut
+            record.total = dpp + ppn_amt + ppnbm_amt + record.ongkos_angkut
 
 class SalesOrderLine(models.Model):
     _name = 'invoicingbackend.sales_order_line'
