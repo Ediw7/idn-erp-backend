@@ -1,7 +1,17 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from datetime import datetime
+import random
 
 class ResCompanyExt(models.Model):
     _inherit = 'res.company'
+
+    def _default_periode_serial(self):
+        # Format: YYYYMM (Contoh: 202606)
+        return datetime.now().strftime("%Y%m")
+
+    def _default_no_serial(self):
+        # Format: KR-YYYYMMDDHHMMSS + 2 random digit
+        return f"KR-{datetime.now().strftime('%Y%m%d%H%M%S')}{random.randint(10,99)}"
 
     # Perpajakan
     l10n_id_npwp = fields.Char(string='NPWP Perusahaan', size=25, help="Nomor Pokok Wajib Pajak")
@@ -22,5 +32,5 @@ class ResCompanyExt(models.Model):
     # Krishand Legacy Profil Fields
     idn_fax = fields.Char(string='No. Fax')
     idn_maks_pelanggan = fields.Integer(string='Maks. Jlh Pelanggan', default=100)
-    idn_periode_serial = fields.Char(string='Periode Serial', default='202012')
-    idn_no_serial = fields.Char(string='No. Serial', default='KR-27119392114408')
+    idn_periode_serial = fields.Char(string='Periode Serial', default=_default_periode_serial)
+    idn_no_serial = fields.Char(string='No. Serial', default=_default_no_serial)
