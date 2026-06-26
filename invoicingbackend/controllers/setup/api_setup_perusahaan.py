@@ -1,6 +1,6 @@
 from odoo import http
 from odoo.http import request
-from .api_response import ApiResponse
+from ..api_response import ApiResponse
 import json
 
 class ApiSetupPerusahaan(http.Controller):
