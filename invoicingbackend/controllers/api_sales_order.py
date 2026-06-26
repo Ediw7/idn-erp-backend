@@ -24,7 +24,8 @@ class ApiSalesOrder(http.Controller):
                 last_day = calendar.monthrange(yr, mn)[1]
                 domain.append(('tgl_so', '<=', f'{yr}-{mn:02d}-{last_day:02d}'))
 
-            records = request.env['invoicingbackend.sales_order'].search(domain, order='tgl_so desc, no_so desc')
+            limit = int(params.get('limit', 2000))
+            records = request.env['invoicingbackend.sales_order'].search(domain, order='tgl_so desc, no_so desc', limit=limit)
             data = []
             for rec in records:
                 lines = []

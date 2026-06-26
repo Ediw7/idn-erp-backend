@@ -14,7 +14,8 @@ class ApiSuratJalan(http.Controller):
             return ApiResponse.success()
         try:
             domain = [('company_id', '=', request.env.user.company_id.id)]
-            records = request.env['invoicingbackend.surat_jalan'].search(domain)
+            limit = int(kwargs.get('limit', 2000))
+            records = request.env['invoicingbackend.surat_jalan'].search(domain, order='tgl_sj desc', limit=limit)
             
             data = []
             for rec in records:
@@ -23,7 +24,7 @@ class ApiSuratJalan(http.Controller):
                     'no_sj': rec.no_sj,
                     'tgl_sj': str(rec.tgl_sj) if rec.tgl_sj else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
-                    'pelanggan_nama': rec.pelanggan_id.name if rec.pelanggan_id else '',
+                    'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'so_id': rec.so_id.id if rec.so_id else None,
                     'no_po': rec.no_po or '',
                     'no_kendaraan': rec.no_kendaraan or '',

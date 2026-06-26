@@ -14,7 +14,8 @@ class ApiKwitansi(http.Controller):
             return ApiResponse.success()
         try:
             domain = [('company_id', '=', request.env.user.company_id.id)]
-            records = request.env['invoicingbackend.kwitansi'].search(domain)
+            limit = int(kwargs.get('limit', 2000))
+            records = request.env['invoicingbackend.kwitansi'].search(domain, order='tgl_kwitansi desc', limit=limit)
             
             data = []
             for rec in records:
@@ -26,7 +27,7 @@ class ApiKwitansi(http.Controller):
                     'invoice_id': rec.invoice_id.id if rec.invoice_id else None,
                     'invoice_no': rec.invoice_id.no_invoice if rec.invoice_id else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
-                    'pelanggan_nama': rec.pelanggan_id.name if rec.pelanggan_id else '',
+                    'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'mata_uang': rec.mata_uang or 'IDR',
                     'jumlah': rec.jumlah,
                     'terbilang': rec.terbilang or '',

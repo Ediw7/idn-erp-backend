@@ -48,3 +48,5 @@ class PembayaranPiutangLine(models.Model):
         for line in self:
             if line.pembayaran < 0 or line.potongan < 0:
                 raise models.ValidationError("Pembayaran dan potongan tidak boleh bernilai negatif.")
+            if line.pembayaran + line.potongan > line.invoice_id.total:
+                raise models.ValidationError(f"Nilai pembayaran dan potongan ({line.pembayaran + line.potongan}) melebihi total tagihan Invoice ({line.invoice_id.total}).")

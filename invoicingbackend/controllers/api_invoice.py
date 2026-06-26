@@ -14,7 +14,8 @@ class ApiInvoice(http.Controller):
             return ApiResponse.success()
         try:
             domain = [('company_id', '=', request.env.user.company_id.id)]
-            records = request.env['invoicingbackend.invoice'].search(domain)
+            limit = int(kwargs.get('limit', 2000))
+            records = request.env['invoicingbackend.invoice'].search(domain, order='tgl_invoice desc', limit=limit)
             
             data = []
             for rec in records:
@@ -23,7 +24,7 @@ class ApiInvoice(http.Controller):
                     'no_invoice': rec.no_invoice,
                     'tgl_invoice': str(rec.tgl_invoice) if rec.tgl_invoice else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
-                    'pelanggan_nama': rec.pelanggan_id.name if rec.pelanggan_id else '',
+                    'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'surat_jalan_id': rec.surat_jalan_id.id if rec.surat_jalan_id else None,
                     'no_fp': rec.no_fp or '',
                     'total': rec.total,

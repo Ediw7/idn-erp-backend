@@ -30,3 +30,9 @@ class SuratJalanLine(models.Model):
     satuan = fields.Char(string='Satuan')
     kuantum = fields.Float(string='Kuantum', default=1.0)
     keterangan = fields.Char(string='Keterangan')
+
+    @api.constrains('kuantum')
+    def _check_negative_kuantum(self):
+        for line in self:
+            if line.kuantum < 0:
+                raise models.ValidationError("Kuantum (jumlah pengiriman) tidak boleh bernilai negatif.")

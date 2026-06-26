@@ -14,7 +14,8 @@ class ApiPembayaranPiutang(http.Controller):
             return ApiResponse.success()
         try:
             domain = [('company_id', '=', request.env.user.company_id.id)]
-            records = request.env['invoicingbackend.pembayaran_piutang'].search(domain)
+            limit = int(kwargs.get('limit', 2000))
+            records = request.env['invoicingbackend.pembayaran_piutang'].search(domain, order='tgl_pembayaran desc', limit=limit)
             
             data = []
             for rec in records:
@@ -23,7 +24,7 @@ class ApiPembayaranPiutang(http.Controller):
                     'no_bukti': rec.no_bukti,
                     'tgl_pembayaran': str(rec.tgl_pembayaran) if rec.tgl_pembayaran else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
-                    'pelanggan_nama': rec.pelanggan_id.name if rec.pelanggan_id else '',
+                    'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'perkiraan_kas_id': rec.perkiraan_kas_id.id if rec.perkiraan_kas_id else None,
                     'keterangan': rec.keterangan or '',
                     'total_pembayaran': rec.total_pembayaran,

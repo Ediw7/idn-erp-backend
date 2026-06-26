@@ -70,3 +70,9 @@ class SalesOrderLine(models.Model):
             base_price = line.kuantum * line.harga_satuan
             discount = (base_price * (line.disc_persen / 100.0)) + line.disc_harga
             line.harga_jual = base_price - discount
+
+    @api.constrains('kuantum', 'harga_satuan', 'disc_persen', 'disc_harga')
+    def _check_negative_values(self):
+        for line in self:
+            if line.kuantum < 0 or line.harga_satuan < 0 or line.disc_persen < 0 or line.disc_harga < 0:
+                raise models.ValidationError("Kuantum, harga satuan, dan diskon tidak boleh bernilai negatif.")

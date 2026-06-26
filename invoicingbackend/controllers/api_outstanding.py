@@ -24,7 +24,8 @@ class ApiOutstanding(http.Controller):
             if pelanggan_id:
                 domain.append(('pelanggan_id', '=', int(pelanggan_id)))
 
-            records = request.env['invoicingbackend.invoice'].search(domain, order="tgl_invoice ASC")
+            limit = int(kwargs.get('limit', 2000))
+            records = request.env['invoicingbackend.invoice'].search(domain, order="tgl_invoice ASC", limit=limit)
             
             data = []
             for rec in records:
@@ -33,7 +34,7 @@ class ApiOutstanding(http.Controller):
                     'no_invoice': rec.no_invoice,
                     'tgl_invoice': str(rec.tgl_invoice) if rec.tgl_invoice else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
-                    'pelanggan_nama': rec.pelanggan_id.name if rec.pelanggan_id else '',
+                    'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'total_tagihan': rec.total,
                     'total_terbayar': rec.total_terbayar,
                     'saldo_piutang': rec.saldo_piutang,
