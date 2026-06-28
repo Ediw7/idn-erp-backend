@@ -21,17 +21,20 @@ class ApiKwitansi(http.Controller):
             for rec in records:
                 data.append({
                     'id': rec.id,
-                    'no_kwitansi': rec.no_kwitansi,
+                    'no_kwitansi': rec.no_kwitansi or '',
                     'tgl_kwitansi': str(rec.tgl_kwitansi) if rec.tgl_kwitansi else '',
                     'jenis': rec.jenis or '',
-                    'invoice_id': rec.invoice_id.id if rec.invoice_id else None,
-                    'invoice_no': rec.invoice_id.no_invoice if rec.invoice_id else '',
-                    'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
+                    'invoice_id': rec.invoice_id.id if rec.invoice_id else '',
+                    'no_invoice': rec.invoice_id.no_invoice if rec.invoice_id else '',
+                    'pembeli_id': rec.pelanggan_id.id if rec.pelanggan_id else '',
+                    'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else '',
                     'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
+                    'alamat': rec.pelanggan_id.alamat_wp or rec.pelanggan_id.alamat or '',
                     'mata_uang': rec.mata_uang or 'IDR',
-                    'jumlah': rec.jumlah,
+                    'jumlah': rec.jumlah or 0.0,
                     'terbilang': rec.terbilang or '',
                     'untuk_pembayaran': rec.untuk_pembayaran or '',
+                    'keterangan_footer': rec.keterangan_footer or '',
                     'penandatangan': rec.penandatangan or '',
                     'jabatan': rec.jabatan or '',
                 })
@@ -77,4 +80,22 @@ class ApiKwitansi(http.Controller):
             
         except Exception as e:
             _logger.error(f"Error saving kwitansi: {str(e)}")
+            return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/kwitansi/delete', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
+    def delete_kwitansi(self, **kw):
+        if request.httprequest.method == 'OPTIONS':
+            return ApiResponse.success()
+        try:
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            kw_id = data.get('id')
+            if not kw_id:
+                return ApiResponse.error(message='ID Kwitansi tidak ditemukan.', status_code=400)
+            record = request.env['invoicingbackend.kwitansi'].browse(int(kw_id))
+            if record.exists():
+                record.unlink()
+                return ApiResponse.success(message='Kwitansi berhasil dihapus')
+            return ApiResponse.error(message='Data tidak ditemukan', status_code=404)
+        except Exception as e:
+            _logger.error(f"Error deleting kwitansi: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)

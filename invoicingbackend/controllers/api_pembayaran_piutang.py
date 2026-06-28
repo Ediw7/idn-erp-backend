@@ -19,17 +19,37 @@ class ApiPembayaranPiutang(http.Controller):
             
             data = []
             for rec in records:
+                lines = []
+                for line in rec.line_ids:
+                    lines.append({
+                        'invoice_id': line.invoice_id.id if line.invoice_id else '',
+                        'no_invoice': line.invoice_id.no_invoice if line.invoice_id else '',
+                        'no_faktur_pajak': line.invoice_id.no_fp if line.invoice_id else '',
+                        'tgl_jt': '',
+                        'ccy': 'IDR',
+                        'saldo_piutang': line.invoice_id.saldo_piutang + line.pembayaran if line.invoice_id else 0, # rough estimate before save
+                        'pembayaran': line.pembayaran,
+                        'potongan': line.potongan,
+                        'keterangan': line.keterangan or ''
+                    })
+
                 data.append({
                     'id': rec.id,
-                    'no_bukti': rec.no_bukti,
-                    'tgl_pembayaran': str(rec.tgl_pembayaran) if rec.tgl_pembayaran else '',
-                    'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
+                    'no_bukti': rec.no_bukti or '',
+                    'tanggal': str(rec.tgl_pembayaran) if rec.tgl_pembayaran else '',
+                    'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else '',
                     'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
-                    'perkiraan_kas_id': rec.perkiraan_kas_id.id if rec.perkiraan_kas_id else None,
+                    'alamat': rec.pelanggan_id.alamat_wp or rec.pelanggan_id.alamat or '',
+                    'perkiraan_kas_bank': rec.perkiraan_kas_id.id if rec.perkiraan_kas_id else '',
                     'keterangan': rec.keterangan or '',
-                    'total_pembayaran': rec.total_pembayaran,
+                    'metode_pembayaran': 'Transfer',
+                    'no_cek_giro': '',
+                    'tanggal_cair': '',
+                    'mata_uang': 'IDR',
+                    'jumlah_penerimaan': rec.total_pembayaran,
                     'total_potongan': rec.total_potongan,
                     'is_void': rec.is_void,
+                    'lines': lines,
                 })
             return ApiResponse.success(data=data)
         except Exception as e:
@@ -87,4 +107,24 @@ class ApiPembayaranPiutang(http.Controller):
             
         except Exception as e:
             _logger.error(f"Error saving pembayaran: {str(e)}")
+            return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/pembayaran/delete', type='http', auth='user', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
+    def delete_pembayaran(self, **kw):
+        if request.httprequest.method == 'OPTIONS':
+            return ApiResponse.success()
+        try:
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            pem_id = data.get('id')
+            if not pem_id:
+                return ApiResponse.error(message='ID Pembayaran tidak ditemukan.', status_code=400)
+            record = request.env['invoicingbackend.pembayaran_piutang'].browse(int(pem_id))
+            if record.exists():
+                if record.is_void:
+                    return ApiResponse.error(message='Pembayaran sudah di-void tidak dapat dihapus', status_code=400)
+                record.unlink()
+                return ApiResponse.success(message='Pembayaran berhasil dihapus')
+            return ApiResponse.error(message='Data tidak ditemukan', status_code=404)
+        except Exception as e:
+            _logger.error(f"Error deleting pembayaran: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)

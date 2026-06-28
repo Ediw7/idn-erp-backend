@@ -36,11 +36,11 @@ class AuthController(http.Controller):
             # Retrieve user context to send back basic info
             user = request.env['res.users'].sudo().browse(uid)
             
-            return Response(
+            response = Response(
                 json.dumps({
                     'message': 'Login successful',
                     'uid': uid,
-                    'session_id': request.session.sid, # Also sent as a Set-Cookie header automatically
+                    'session_id': request.session.sid,
                     'company_id': request.env.company.id,
                     'user': {
                         'name': user.name,
@@ -52,6 +52,8 @@ class AuthController(http.Controller):
                 status=200,
                 content_type='application/json'
             )
+            response.set_cookie('session_id', request.session.sid, httponly=True, samesite='Lax')
+            return response
         except Exception as e:
             return Response(
                 json.dumps({'error': str(e)}), 
@@ -105,13 +107,16 @@ class AuthController(http.Controller):
         except Exception as e:
             return Response(json.dumps({'error': str(e)}), status=500, content_type='application/json')
 
-    @http.route('/api/auth/users', type='http', auth='user', methods=['GET', 'OPTIONS'], csrf=False, cors='*')
+    @http.route('/api/auth/users', type='http', auth='public', methods=['GET', 'OPTIONS'], csrf=False, cors='*')
     def get_users(self, **kwargs):
         if request.httprequest.method == 'OPTIONS':
             return Response(status=200)
             
+        if not request.session.uid:
+            return Response(json.dumps({'error': 'Session expired or unauthorized'}), status=401, content_type='application/json')
+            
         try:
-            if not request.env.user.has_group('base.group_erp_manager'):
+            if not request.env['res.users'].sudo().browse(request.session.uid).has_group('base.group_erp_manager'):
                 return Response(json.dumps({'error': 'Access Denied'}), status=403, content_type='application/json')
             
             users = request.env['res.users'].sudo().search([])

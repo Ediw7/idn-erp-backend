@@ -43,8 +43,29 @@ class ApiSalesOrder(http.Controller):
                         'harga_jual': line.harga_jual,
                         'keterangan': line.keterangan or '',
                     })
+                surat_jalans = request.env['invoicingbackend.surat_jalan'].search([('so_id', '=', rec.id)])
+                sj_list = []
+                for sj in surat_jalans:
+                    sj_lines = []
+                    for sj_line in sj.line_ids:
+                        sj_lines.append({
+                            'item_id': sj_line.item_id.id if sj_line.item_id else None,
+                            'kuantum': sj_line.kuantum
+                        })
+                    
+                    sj_list.append({
+                        'id': sj.id,
+                        'no_sj': sj.no_sj or '',
+                        'tanggal': sj.tgl_sj.strftime('%Y-%m-%d') if sj.tgl_sj else '',
+                        'gudang_id': sj.gudang_id.id if sj.gudang_id else None,
+                        'no_kendaraan': sj.no_kendaraan or '',
+                        'keterangan': sj.keterangan or '',
+                        'lines': sj_lines
+                    })
+
                 data.append({
                     'id': rec.id,
+                    'surat_jalans': sj_list,
                     'no_so': rec.no_so or '',
                     'tgl_so': rec.tgl_so.strftime('%Y-%m-%d') if rec.tgl_so else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,

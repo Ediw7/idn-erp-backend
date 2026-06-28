@@ -33,11 +33,13 @@ class ApiOutstanding(http.Controller):
                     'id': rec.id,
                     'no_invoice': rec.no_invoice,
                     'tgl_invoice': str(rec.tgl_invoice) if rec.tgl_invoice else '',
+                    'pembeli_id': rec.pelanggan_id.id if rec.pelanggan_id else '',
                     'pelanggan_id': rec.pelanggan_id.id if rec.pelanggan_id else None,
                     'pelanggan_nama': rec.pelanggan_id.nama if rec.pelanggan_id else '',
                     'total_tagihan': rec.total,
                     'total_terbayar': rec.total_terbayar,
                     'saldo_piutang': rec.saldo_piutang,
+                    'saldo': rec.saldo_piutang,
                 })
             return ApiResponse.success(data=data)
         except Exception as e:
