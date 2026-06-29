@@ -44,6 +44,7 @@ class ApiSuratJalan(http.Controller):
                     'no_kendaraan': rec.no_kendaraan or '',
                     'no_invoice': rec.no_invoice or '',
                     'keterangan': rec.keterangan or '',
+                    'is_void': rec.is_void,
                     'lines': lines,
                 })
             return ApiResponse.success(data=data)
@@ -74,10 +75,11 @@ class ApiSuratJalan(http.Controller):
                 'alamat_kirim': data.get('alamat_kirim'),
                 'gudang_id': data.get('gudang_id'),
                 'so_id': data.get('so_id'),
-                'no_po': data.get('no_po'),
-                'no_kendaraan': data.get('no_kendaraan'),
-                'keterangan': data.get('keterangan'),
-                'company_id': request.env.user.company_id.id,
+                'no_po': data.get('no_po') or '',
+                'no_kendaraan': data.get('no_kendaraan') or '',
+                'keterangan': data.get('keterangan') or '',
+                'is_void': data.get('is_void') or False,
+                'company_id': request.env.user.company_id.id
             }
 
             lines_data = data.get('lines', [])

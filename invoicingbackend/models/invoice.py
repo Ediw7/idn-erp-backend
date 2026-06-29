@@ -12,7 +12,7 @@ class Invoice(models.Model):
     alamat = fields.Text(string='Alamat', related='pelanggan_id.alamat', readonly=True)
     
     surat_jalan_id = fields.Many2one('invoicingbackend.surat_jalan', string='Dari Surat Jalan')
-    sales_order_id = fields.Many2one('invoicingbackend.sales_order', string='Dari Sales Order')
+    sales_order_id = fields.Many2one('invoicingbackend.sales_order', string='Dari Sales Order', ondelete='restrict')
     
     no_fp = fields.Char(string='No. Faktur Pajak')
     tgl_fp = fields.Date(string='Tgl Faktur Pajak')

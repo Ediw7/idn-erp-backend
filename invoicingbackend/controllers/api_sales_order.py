@@ -60,6 +60,7 @@ class ApiSalesOrder(http.Controller):
                         'gudang_id': sj.gudang_id.id if sj.gudang_id else None,
                         'no_kendaraan': sj.no_kendaraan or '',
                         'keterangan': sj.keterangan or '',
+                        'is_void': sj.is_void,
                         'lines': sj_lines
                     })
 
@@ -149,6 +150,11 @@ class ApiSalesOrder(http.Controller):
             if record_id:
                 record = request.env['invoicingbackend.sales_order'].browse(int(record_id))
                 if record.exists():
+                    has_sj = request.env['invoicingbackend.surat_jalan'].search_count([('so_id', '=', record.id)]) > 0
+                    has_inv = request.env['invoicingbackend.invoice'].search_count([('sales_order_id', '=', record.id)]) > 0
+                    if has_sj or has_inv:
+                        return {'status': 'error', 'message': 'Sales Order tidak dapat diedit karena sudah memiliki relasi ke Surat Jalan atau Invoice!'}
+                    
                     record.write(vals)
                 else:
                     return {'status': 'error', 'message': 'Data tidak ditemukan'}
@@ -168,6 +174,11 @@ class ApiSalesOrder(http.Controller):
                 return {'status': 'error', 'message': 'ID tidak valid'}
             record = request.env['invoicingbackend.sales_order'].browse(int(record_id))
             if record.exists():
+                has_sj = request.env['invoicingbackend.surat_jalan'].search_count([('so_id', '=', record.id)]) > 0
+                has_inv = request.env['invoicingbackend.invoice'].search_count([('sales_order_id', '=', record.id)]) > 0
+                if has_sj or has_inv:
+                    return {'status': 'error', 'message': 'Sales Order tidak dapat dihapus karena sudah memiliki relasi ke Surat Jalan atau Invoice!'}
+                
                 record.unlink()
                 return {'status': 'success', 'message': 'Sales Order berhasil dihapus'}
             return {'status': 'error', 'message': 'Data tidak ditemukan'}
