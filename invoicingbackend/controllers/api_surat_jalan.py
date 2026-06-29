@@ -100,8 +100,15 @@ class ApiSuratJalan(http.Controller):
             vals['line_ids'] = line_cmds
 
             if sj_id:
-                record = request.env['invoicingbackend.surat_jalan'].browse(sj_id)
+                record = request.env['invoicingbackend.surat_jalan'].browse(int(sj_id))
                 if record.exists():
+                    has_invoice = request.env['invoicingbackend.invoice'].search_count([
+                        ('surat_jalan_id', '=', record.id),
+                        ('is_void', '=', False)
+                    ])
+                    if has_invoice > 0:
+                        return ApiResponse.error(message='Surat Jalan tidak dapat diubah karena sudah memiliki Invoice aktif!', status_code=400)
+                    
                     record.write(vals)
                 else:
                     return ApiResponse.error(message='Data Surat Jalan tidak ditemukan', status_code=404)
@@ -125,6 +132,13 @@ class ApiSuratJalan(http.Controller):
                 return ApiResponse.error(message='ID Surat Jalan tidak ditemukan.', status_code=400)
             record = request.env['invoicingbackend.surat_jalan'].browse(int(sj_id))
             if record.exists():
+                has_invoice = request.env['invoicingbackend.invoice'].search_count([
+                    ('surat_jalan_id', '=', record.id),
+                    ('is_void', '=', False)
+                ])
+                if has_invoice > 0:
+                    return ApiResponse.error(message='Surat Jalan tidak dapat dihapus karena sudah memiliki Invoice aktif!', status_code=400)
+                    
                 record.unlink()
                 return ApiResponse.success(message='Surat Jalan berhasil dihapus')
             return ApiResponse.error(message='Data tidak ditemukan', status_code=404)

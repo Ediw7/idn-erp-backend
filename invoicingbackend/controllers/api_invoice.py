@@ -87,6 +87,19 @@ class ApiInvoice(http.Controller):
                     if sj:
                         surat_jalan_id = sj.id
 
+            if surat_jalan_id:
+                # Cek apakah SJ ini sudah di-invoice oleh dokumen lain (yang bukan void)
+                existing_domain = [
+                    ('surat_jalan_id', '=', surat_jalan_id),
+                    ('is_void', '=', False)
+                ]
+                if invoice_id:
+                    existing_domain.append(('id', '!=', int(invoice_id)))
+                    
+                existing = request.env['invoicingbackend.invoice'].search_count(existing_domain)
+                if existing > 0:
+                    return ApiResponse.error(message="Surat Jalan ini sudah pernah ditagihkan (Di-Invoice). Tidak bisa dibuat double!", status_code=400)
+
             vals = {
                 'no_invoice': data.get('no_invoice'),
                 'tgl_invoice': data.get('tgl_invoice'),
@@ -158,6 +171,11 @@ class ApiInvoice(http.Controller):
             if record.exists():
                 if record.is_lunas:
                     return ApiResponse.error(message='Invoice sudah lunas tidak dapat dihapus', status_code=400)
+                
+                # Kosongkan no_invoice pada Surat Jalan terkait sebelum di-delete
+                if record.surat_jalan_id:
+                    record.surat_jalan_id.write({'no_invoice': ''})
+                    
                 record.unlink()
                 return ApiResponse.success(message='Invoice berhasil dihapus')
             return ApiResponse.error(message='Data tidak ditemukan', status_code=404)
