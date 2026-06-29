@@ -18,10 +18,12 @@ class SalesOrder(models.Model):
     tgl_kirim = fields.Date(string='Tgl Kirim')
     dipesan_oleh = fields.Char(string='Dipesan Oleh')
     
-    is_closed = fields.Boolean(string='Closed', default=False)
+    is_closed = fields.Boolean(string='Closed', compute='_compute_is_closed', store=True)
     is_void = fields.Boolean(string='Void', default=False)
     
     keterangan = fields.Text(string='Keterangan')
+    
+    invoice_ids = fields.One2many('invoicingbackend.invoice', 'sales_order_id', string='Invoices')
     
     subtotal = fields.Float(string='Sub Total', compute='_compute_totals', store=True)
     potongan_harga = fields.Float(string='Potongan Harga')
@@ -47,6 +49,17 @@ class SalesOrder(models.Model):
             record.ppnbm_amount = ppnbm_amt
             
             record.total = dpp + ppn_amt + ppnbm_amt + record.ongkos_angkut
+
+    @api.depends('invoice_ids.is_lunas', 'invoice_ids.is_void')
+    def _compute_is_closed(self):
+        for record in self:
+            valid_invoices = record.invoice_ids.filtered(lambda inv: not inv.is_void)
+            if valid_invoices:
+                # Jika ada invoice yang valid, SO dianggap tertutup jika semuanya lunas
+                record.is_closed = all(inv.is_lunas for inv in valid_invoices)
+            else:
+                record.is_closed = False
+
 
 class SalesOrderLine(models.Model):
     _name = 'invoicingbackend.sales_order_line'
