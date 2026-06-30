@@ -33,7 +33,7 @@ class PembayaranPiutangLine(models.Model):
     _inherit = 'invoicingbackend.base_tenant'
 
     pembayaran_id = fields.Many2one('invoicingbackend.pembayaran_piutang', string='Bukti Pembayaran', ondelete='cascade')
-    invoice_id = fields.Many2one('invoicingbackend.invoice', string='Invoice', required=True)
+    invoice_id = fields.Many2one('invoicingbackend.invoice', string='Invoice', required=True, ondelete='restrict')
     
     saldo_piutang = fields.Float(related='invoice_id.total', string='Total Tagihan Awal', readonly=True)
     pembayaran = fields.Float(string='Nilai Pembayaran', required=True, default=0.0)
@@ -48,5 +48,16 @@ class PembayaranPiutangLine(models.Model):
         for line in self:
             if line.pembayaran < 0 or line.potongan < 0:
                 raise models.ValidationError("Pembayaran dan potongan tidak boleh bernilai negatif.")
-            if line.pembayaran + line.potongan > line.invoice_id.total:
-                raise models.ValidationError(f"Nilai pembayaran dan potongan ({line.pembayaran + line.potongan}) melebihi total tagihan Invoice ({line.invoice_id.total}).")
+            
+            # Cari seluruh pembayaran untuk invoice ini, KECUALI pembayaran dari record yang sedang void
+            # Kita gunakan sudo() atau search() untuk menjumlahkan semua.
+            all_payments = self.env['invoicingbackend.pembayaran_piutang_line'].search([
+                ('invoice_id', '=', line.invoice_id.id),
+                ('pembayaran_id.is_void', '=', False),
+                ('id', '!=', line.id if line.id else False)
+            ])
+            total_paid_others = sum(p.pembayaran + p.potongan for p in all_payments)
+            total_attempted = total_paid_others + line.pembayaran + line.potongan
+            
+            if total_attempted > line.invoice_id.total + 0.01:
+                raise models.ValidationError(f"Overpayment! Total pembayaran dan potongan yang dicoba ({total_attempted}) melebihi total tagihan Invoice ({line.invoice_id.total}).")

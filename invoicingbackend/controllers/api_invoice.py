@@ -134,12 +134,15 @@ class ApiInvoice(http.Controller):
                 }))
                 
             vals['line_ids'] = line_cmds
-
+            
             if invoice_id:
-                record = request.env['invoicingbackend.invoice'].browse(invoice_id)
+                record = request.env['invoicingbackend.invoice'].browse(int(invoice_id))
                 if record.exists():
                     if record.is_void:
                         return ApiResponse.error(message="Tidak dapat merubah invoice yang sudah di-void", status_code=400)
+                    if record.total_terbayar > 0:
+                        return ApiResponse.error(message="Invoice sudah memiliki riwayat pembayaran, tidak dapat diedit!", status_code=400)
+                    
                     record.write(vals)
                 else:
                     return ApiResponse.error(message='Data Invoice tidak ditemukan', status_code=404)
@@ -171,6 +174,8 @@ class ApiInvoice(http.Controller):
             if record.exists():
                 if record.is_lunas:
                     return ApiResponse.error(message='Invoice sudah lunas tidak dapat dihapus', status_code=400)
+                if record.total_terbayar > 0:
+                    return ApiResponse.error(message='Invoice tidak dapat dihapus karena sudah memiliki riwayat pembayaran (walaupun belum lunas)!', status_code=400)
                 
                 # Kosongkan no_invoice pada Surat Jalan terkait sebelum di-delete
                 if record.surat_jalan_id:

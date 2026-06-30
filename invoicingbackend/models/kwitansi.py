@@ -12,7 +12,7 @@ class Kwitansi(models.Model):
         ('Non-VAT', 'Non-VAT')
     ], string='Jenis Kwitansi', default='VAT')
     
-    invoice_id = fields.Many2one('invoicingbackend.invoice', string='Dari Invoice')
+    invoice_id = fields.Many2one('invoicingbackend.invoice', string='Dari Invoice', ondelete='restrict')
     pelanggan_id = fields.Many2one('invoicingbackend.pelanggan', string='Sudah Terima Dari', required=True)
     
     mata_uang = fields.Selection([
