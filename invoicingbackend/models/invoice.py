@@ -25,6 +25,8 @@ class Invoice(models.Model):
     potongan_harga = fields.Float(string='Potongan Harga', default=0.0)
     ppn_persen = fields.Float(string='PPN (%)', default=11.0)
     ppn_amount = fields.Float(string='PPN Amount', compute='_compute_totals', store=True)
+    pph_persen = fields.Float(string='PPh 22 (%)', default=0.0)
+    pph_amount = fields.Float(string='PPh 22 Amount', compute='_compute_totals', store=True)
     ongkos_angkut = fields.Float(string='Ongkos Angkut', default=0.0)
     total = fields.Float(string='Total Tagihan', compute='_compute_totals', store=True)
     
@@ -38,7 +40,7 @@ class Invoice(models.Model):
     line_ids = fields.One2many('invoicingbackend.invoice_line', 'invoice_id', string='Detail Invoice')
     pembayaran_line_ids = fields.One2many('invoicingbackend.pembayaran_piutang_line', 'invoice_id', string='Histori Pembayaran')
 
-    @api.depends('line_ids.harga_jual', 'potongan_harga', 'ppn_persen', 'ongkos_angkut')
+    @api.depends('line_ids.harga_jual', 'potongan_harga', 'ppn_persen', 'pph_persen', 'ongkos_angkut')
     def _compute_totals(self):
         for record in self:
             sub = sum(line.harga_jual for line in record.line_ids)
@@ -48,7 +50,10 @@ class Invoice(models.Model):
             ppn = dpp * (record.ppn_persen / 100.0)
             record.ppn_amount = ppn
             
-            record.total = dpp + ppn + record.ongkos_angkut
+            pph = dpp * (record.pph_persen / 100.0)
+            record.pph_amount = pph
+            
+            record.total = dpp + ppn + pph + record.ongkos_angkut
 
     @api.depends('pembayaran_line_ids.pembayaran', 'pembayaran_line_ids.potongan', 'pembayaran_line_ids.pembayaran_id.is_void')
     def _compute_terbayar(self):
