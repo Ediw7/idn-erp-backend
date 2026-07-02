@@ -33,6 +33,22 @@ class ApiInvoice(http.Controller):
                         'harga_jual': line.harga_jual,
                     })
 
+                surat_jalans_data = []
+                for sj in rec.surat_jalan_ids:
+                    surat_jalans_data.append({
+                        'no_sj': sj.no_sj,
+                        'tanggal': sj.tgl_sj.strftime('%Y-%m-%d') if sj.tgl_sj else '',
+                        'keterangan': sj.keterangan or ''
+                    })
+                
+                # Legacy fallback just in case
+                if not surat_jalans_data and rec.surat_jalan_id:
+                    surat_jalans_data.append({
+                        'no_sj': rec.surat_jalan_id.no_sj,
+                        'tanggal': rec.surat_jalan_id.tgl_sj.strftime('%Y-%m-%d') if rec.surat_jalan_id.tgl_sj else '',
+                        'keterangan': rec.surat_jalan_id.keterangan or ''
+                    })
+
                 data.append({
                     'id': rec.id,
                     'no_invoice': rec.no_invoice or '',
@@ -43,6 +59,8 @@ class ApiInvoice(http.Controller):
                     'alamat': rec.pelanggan_id.alamat_wp or rec.pelanggan_id.alamat or '',
                     'npwp': rec.pelanggan_id.npwp or '',
                     'surat_jalan_id': rec.surat_jalan_id.id if rec.surat_jalan_id else '',
+                    'surat_jalans': surat_jalans_data,
+                    'no_sj': rec.surat_jalan_id.no_sj if rec.surat_jalan_id else (surat_jalans_data[0]['no_sj'] if surat_jalans_data else ''),
                     'sales_order_id': rec.sales_order_id.id if rec.sales_order_id else '',
                     'no_so': rec.sales_order_id.no_so if rec.sales_order_id else '',
                     'no_fp': rec.no_fp or '',
@@ -78,33 +96,35 @@ class ApiInvoice(http.Controller):
             if not data.get('pelanggan_id'):
                 return ApiResponse.error(message='Pelanggan wajib dipilih.', status_code=400)
             
-            surat_jalan_id = data.get('surat_jalan_id')
-            if not surat_jalan_id and data.get('surat_jalans'):
-                # Coba cari dari data 'surat_jalans' array
-                no_sj = data.get('surat_jalans')[0].get('no_sj') if isinstance(data.get('surat_jalans'), list) and len(data.get('surat_jalans')) > 0 else None
-                if no_sj:
-                    sj = request.env['invoicingbackend.surat_jalan'].search([('no_sj', '=', no_sj)], limit=1)
-                    if sj:
-                        surat_jalan_id = sj.id
-
-            if surat_jalan_id:
-                # Cek apakah SJ ini sudah di-invoice oleh dokumen lain (yang bukan void)
+            surat_jalans = data.get('surat_jalans', [])
+            found_sjs = request.env['invoicingbackend.surat_jalan']
+            
+            # Support multiple SJs
+            if surat_jalans and isinstance(surat_jalans, list):
+                sj_nos = [sj.get('no_sj') for sj in surat_jalans if sj.get('no_sj')]
+                if sj_nos:
+                    found_sjs = request.env['invoicingbackend.surat_jalan'].search([('no_sj', 'in', sj_nos)])
+            
+            # Validasi apakah SJ ini sudah di-invoice oleh dokumen lain
+            if found_sjs:
                 existing_domain = [
-                    ('surat_jalan_id', '=', surat_jalan_id),
-                    ('is_void', '=', False)
+                    ('invoice_id', '!=', False),
+                    ('is_void', '=', False),
+                    ('id', 'in', found_sjs.ids)
                 ]
                 if invoice_id:
-                    existing_domain.append(('id', '!=', int(invoice_id)))
+                    existing_domain.append(('invoice_id', '!=', int(invoice_id)))
                     
-                existing = request.env['invoicingbackend.invoice'].search_count(existing_domain)
+                existing = request.env['invoicingbackend.surat_jalan'].search_count(existing_domain)
                 if existing > 0:
-                    return ApiResponse.error(message="Surat Jalan ini sudah pernah ditagihkan (Di-Invoice). Tidak bisa dibuat double!", status_code=400)
+                    return ApiResponse.error(message="Salah satu Surat Jalan ini sudah pernah ditagihkan (Di-Invoice). Tidak bisa dibuat double!", status_code=400)
 
             vals = {
                 'no_invoice': data.get('no_invoice'),
                 'tgl_invoice': data.get('tgl_invoice'),
                 'pelanggan_id': data.get('pelanggan_id'),
-                'surat_jalan_id': surat_jalan_id,
+                'surat_jalan_ids': [(6, 0, found_sjs.ids)] if found_sjs else False,
+                'surat_jalan_id': found_sjs[0].id if len(found_sjs) > 0 else False, # Fallback legacy
                 'sales_order_id': data.get('sales_order_id'),
                 'no_fp': data.get('no_fp'),
                 'tgl_fp': data.get('tgl_fp') or False,
@@ -149,11 +169,18 @@ class ApiInvoice(http.Controller):
             else:
                 record = request.env['invoicingbackend.invoice'].create(vals)
                 
-            # Update Surat Jalan terkait
-            if surat_jalan_id:
-                sj = request.env['invoicingbackend.surat_jalan'].browse(surat_jalan_id)
-                if sj.exists():
-                    sj.write({'no_invoice': record.no_invoice})
+            # Update Surat Jalan terkait: Kosongkan yang lama (jika ada), isi yang baru
+            if invoice_id:
+                # Cari SJ yang mungkin dilepas dari invoice ini dan kosongkan
+                orphaned_sjs = request.env['invoicingbackend.surat_jalan'].search([
+                    ('no_invoice', '=', record.no_invoice),
+                    ('id', 'not in', found_sjs.ids)
+                ])
+                if orphaned_sjs:
+                    orphaned_sjs.write({'no_invoice': '', 'invoice_id': False})
+            
+            if found_sjs:
+                found_sjs.write({'no_invoice': record.no_invoice, 'invoice_id': record.id})
 
             return ApiResponse.success(data={'id': record.id}, message='Invoice berhasil disimpan')
             
@@ -178,8 +205,10 @@ class ApiInvoice(http.Controller):
                     return ApiResponse.error(message='Invoice tidak dapat dihapus karena sudah memiliki riwayat pembayaran (walaupun belum lunas)!', status_code=400)
                 
                 # Kosongkan no_invoice pada Surat Jalan terkait sebelum di-delete
-                if record.surat_jalan_id:
-                    record.surat_jalan_id.write({'no_invoice': ''})
+                if record.surat_jalan_ids:
+                    record.surat_jalan_ids.write({'no_invoice': '', 'invoice_id': False})
+                elif record.surat_jalan_id:
+                    record.surat_jalan_id.write({'no_invoice': '', 'invoice_id': False})
                     
                 record.unlink()
                 return ApiResponse.success(message='Invoice berhasil dihapus')

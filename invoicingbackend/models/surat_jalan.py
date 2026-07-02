@@ -15,6 +15,7 @@ class SuratJalan(models.Model):
     no_po = fields.Char(string='No. PO')
     no_kendaraan = fields.Char(string='No. Kendaraan')
     no_invoice = fields.Char(string='No. Invoice')
+    invoice_id = fields.Many2one('invoicingbackend.invoice', string='Invoice', ondelete='set null')
     keterangan = fields.Text(string='Keterangan')
     is_void = fields.Boolean(string='Void', default=False)
     
