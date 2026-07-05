@@ -95,7 +95,16 @@ class ApiInvoice(http.Controller):
             if not data.get('no_invoice'):
                 return ApiResponse.error(message='Nomor Invoice wajib diisi.', status_code=400)
             if not data.get('tgl_invoice'):
-                return ApiResponse.error(message='Tanggal Invoice wajib diisi.', status_code=400)
+                return ApiResponse.error(message='Tanggal Invoice wajib diisi', status_code=400)
+            
+            no_invoice = data.get('no_invoice')
+            domain = [('no_invoice', '=', no_invoice)]
+            if invoice_id:
+                domain.append(('id', '!=', int(invoice_id)))
+            existing_inv = request.env['invoicingbackend.invoice'].search(domain, limit=1)
+            if existing_inv:
+                return ApiResponse.error(message=f'Nomor Invoice {no_invoice} sudah digunakan oleh transaksi lain. Silakan gunakan Auto No atau masukkan nomor unik.', status_code=400)
+
             if not data.get('pelanggan_id'):
                 return ApiResponse.error(message='Pelanggan wajib dipilih.', status_code=400)
             
@@ -218,3 +227,28 @@ class ApiInvoice(http.Controller):
         except Exception as e:
             _logger.error(f"Error deleting invoice: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/invoice/auto-no', type='json', auth='user', methods=['POST'], cors='*')
+    def auto_no_invoice(self, **kw):
+        try:
+            from datetime import date
+            today = date.today()
+            year_str = str(today.year)
+            
+            records = request.env['invoicingbackend.invoice'].search(
+                [('no_invoice', 'like', f'INV/{year_str}/%')],
+                order='no_invoice desc', limit=1
+            )
+            if records:
+                last_no = records[0].no_invoice
+                parts = last_no.split('/')
+                try:
+                    seq = int(parts[2]) + 1
+                except:
+                    seq = 1
+            else:
+                seq = 1
+            new_no = f'INV/{year_str}/{seq:03d}'
+            return {'status': 'success', 'data': new_no}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}

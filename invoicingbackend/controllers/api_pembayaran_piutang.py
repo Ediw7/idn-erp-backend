@@ -63,6 +63,16 @@ class ApiPembayaranPiutang(http.Controller):
         try:
             data = json.loads(request.httprequest.data.decode('utf-8'))
             pem_id = data.get('id')
+            no_bukti = data.get('no_bukti')
+            if not no_bukti:
+                return ApiResponse.error(message='Nomor Bukti wajib diisi.', status_code=400)
+                
+            domain = [('no_bukti', '=', no_bukti)]
+            if pem_id:
+                domain.append(('id', '!=', int(pem_id)))
+            existing = request.env['invoicingbackend.pembayaran_piutang'].search(domain, limit=1)
+            if existing:
+                return ApiResponse.error(message=f'Nomor Bukti {no_bukti} sudah digunakan. Silakan gunakan Auto No.', status_code=400)
             
             vals = {
                 'no_bukti': data.get('no_bukti'),
@@ -128,3 +138,29 @@ class ApiPembayaranPiutang(http.Controller):
         except Exception as e:
             _logger.error(f"Error deleting pembayaran: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/pembayaran/auto-no', type='json', auth='user', methods=['POST'], cors='*')
+    def auto_no_pembayaran(self, **kw):
+        try:
+            from datetime import date
+            today = date.today()
+            month_str = f'{today.month:02d}'
+            year_str = str(today.year)
+            
+            records = request.env['invoicingbackend.pembayaran_piutang'].search(
+                [('no_bukti', 'like', f'BM/%/{month_str}/{year_str}')],
+                order='no_bukti desc', limit=1
+            )
+            if records:
+                last_no = records[0].no_bukti
+                parts = last_no.split('/')
+                try:
+                    seq = int(parts[1]) + 1
+                except:
+                    seq = 1
+            else:
+                seq = 1
+            new_no = f'BM/{seq:03d}/{month_str}/{year_str}'
+            return {'status': 'success', 'data': new_no}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}

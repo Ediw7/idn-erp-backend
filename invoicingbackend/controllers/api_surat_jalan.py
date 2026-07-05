@@ -67,6 +67,16 @@ class ApiSuratJalan(http.Controller):
                 return ApiResponse.error(message='Tanggal Surat Jalan wajib diisi.', status_code=400)
             if not data.get('pelanggan_id'):
                 return ApiResponse.error(message='Nama Pelanggan wajib dipilih.', status_code=400)
+                
+            no_sj = data.get('no_sj')
+            
+            # --- Validasi Unik no_sj ---
+            domain = [('no_sj', '=', no_sj)]
+            if sj_id:
+                domain.append(('id', '!=', sj_id))
+            existing_sj = request.env['invoicingbackend.surat_jalan'].search(domain, limit=1)
+            if existing_sj:
+                return ApiResponse.error(message=f'Nomor Surat Jalan {no_sj} sudah digunakan oleh transaksi lain. Silakan gunakan Auto No atau masukkan nomor unik.', status_code=400)
             
             vals = {
                 'no_sj': data.get('no_sj'),
@@ -137,3 +147,29 @@ class ApiSuratJalan(http.Controller):
         except Exception as e:
             _logger.error(f"Error deleting surat jalan: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/surat_jalan/auto-no', type='json', auth='user', methods=['POST'], cors='*')
+    def auto_no_sj(self, **kw):
+        try:
+            from datetime import date
+            today = date.today()
+            month_str = f'{today.month:02d}'
+            year_str = str(today.year)
+            
+            records = request.env['invoicingbackend.surat_jalan'].search(
+                [('no_sj', 'like', f'SJ/%/{month_str}/{year_str}')],
+                order='no_sj desc', limit=1
+            )
+            if records:
+                last_no = records[0].no_sj
+                parts = last_no.split('/')
+                try:
+                    seq = int(parts[1]) + 1
+                except:
+                    seq = 1
+            else:
+                seq = 1
+            new_no = f'SJ/{seq:03d}/{month_str}/{year_str}'
+            return {'status': 'success', 'data': new_no}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}

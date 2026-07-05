@@ -50,6 +50,16 @@ class ApiKwitansi(http.Controller):
         try:
             data = json.loads(request.httprequest.data.decode('utf-8'))
             kw_id = data.get('id')
+            no_kwitansi = data.get('no_kwitansi')
+            if not no_kwitansi:
+                return ApiResponse.error(message='Nomor Kwitansi wajib diisi.', status_code=400)
+                
+            domain = [('no_kwitansi', '=', no_kwitansi)]
+            if kw_id:
+                domain.append(('id', '!=', int(kw_id)))
+            existing = request.env['invoicingbackend.kwitansi'].search(domain, limit=1)
+            if existing:
+                return ApiResponse.error(message=f'Nomor Kwitansi {no_kwitansi} sudah digunakan. Silakan gunakan Auto No.', status_code=400)
             
             vals = {
                 'no_kwitansi': data.get('no_kwitansi'),
@@ -99,3 +109,29 @@ class ApiKwitansi(http.Controller):
         except Exception as e:
             _logger.error(f"Error deleting kwitansi: {str(e)}")
             return ApiResponse.error(message=str(e), status_code=500)
+
+    @http.route('/api/kwitansi/auto-no', type='json', auth='user', methods=['POST'], cors='*')
+    def auto_no_kwitansi(self, **kw):
+        try:
+            from datetime import date
+            today = date.today()
+            month_str = f'{today.month:02d}'
+            year_str = str(today.year)
+            
+            records = request.env['invoicingbackend.kwitansi'].search(
+                [('no_kwitansi', 'like', f'KT/%/{month_str}/{year_str}')],
+                order='no_kwitansi desc', limit=1
+            )
+            if records:
+                last_no = records[0].no_kwitansi
+                parts = last_no.split('/')
+                try:
+                    seq = int(parts[1]) + 1
+                except:
+                    seq = 1
+            else:
+                seq = 1
+            new_no = f'KT/{seq:03d}/{month_str}/{year_str}'
+            return {'status': 'success', 'data': new_no}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
