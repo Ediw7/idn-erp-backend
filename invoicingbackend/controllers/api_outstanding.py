@@ -40,7 +40,7 @@ class ApiOutstanding(http.Controller):
                     'no_telp': rec.pelanggan_id.telepon or rec.pelanggan_id.no_hp or '',
                     'mata_uang': rec.sales_order_id.mata_uang_id.kode if rec.sales_order_id and rec.sales_order_id.mata_uang_id else 'IDR',
                     'sales': rec.sales_order_id.salesman_id.nama if rec.sales_order_id and rec.sales_order_id.salesman_id else '',
-                    'proyek': rec.sales_order_id.proyek if rec.sales_order_id else '',
+                    'proyek': '',
                     'no_so': rec.sales_order_id.no_so if rec.sales_order_id else '',
                     'no_po': rec.sales_order_id.no_po if rec.sales_order_id else '',
                     'catatan': rec.keterangan or '',
