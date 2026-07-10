@@ -146,6 +146,7 @@ class ApiInvoice(http.Controller):
                 'pph_persen': float(data.get('pph_persen', 0.0)),
                 'ongkos_angkut': float(data.get('ongkos_angkut', 0.0)),
                 'company_id': request.env.user.company_id.id,
+                'is_void': data.get('is_void', False),
             }
 
             # Detail lines
@@ -164,6 +165,7 @@ class ApiInvoice(http.Controller):
                     'disc_persen': float(line.get('disc_persen', 0.0)),
                     'disc_harga': float(line.get('disc_harga', 0.0)),
                     'company_id': request.env.user.company_id.id,
+                'is_void': data.get('is_void', False),
                 }))
                 
             vals['line_ids'] = line_cmds
