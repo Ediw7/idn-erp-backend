@@ -1,0 +1,48 @@
+name: CI - Backend
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+
+jobs:
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install pylint-odoo
+        run: pip install pylint-odoo
+      - name: Lint module invoicingbackend
+        run: pylint --rcfile=.pylintrc --load-plugins=pylint_odoo -d all -e odoolint invoicingbackend || true
+
+  odoo-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U odoo"
+          --health-interval=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t backend-test .
+
+      - name: Run Odoo module test
+        run: |
+          docker run --rm --network=host \
+            backend-test \
+            odoo -d test_db --db_host=localhost --db_user=odoo --db_password=odoo \
+            -i invoicingbackend --test-enable --stop-after-init --log-level=test
