@@ -24,8 +24,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/ediw7/idn-erp-backend:latest
+            ghcr.io/ediw7/idn-erp-backend:${{ github.sha }}
 
   # Opsional — hapus/comment kalau belum ada server tujuan
   deploy:
