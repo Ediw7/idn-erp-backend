@@ -1,4 +1,13 @@
-# 0.1.0 (2026-07-11)
+## [0.1.1](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.0...v0.1.1) (2026-07-11)
+
+
+### Bug Fixes
+
+* merge format and changelog to prevent race condition ([37b6367](https://github.com/Ediw7/idn-erp-backend/commit/37b63673ae874687adac609f936a1cb731413fb8))
+
+
+
+# [0.1.0](https://github.com/Ediw7/idn-erp-backend/compare/e94f90dd392f2775231da78552935da8cfb48679...v0.1.0) (2026-07-11)
 
 
 ### Bug Fixes
