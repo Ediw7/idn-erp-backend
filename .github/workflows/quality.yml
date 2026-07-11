@@ -1,4 +1,4 @@
-name: Changelog & Release
+name: Quality & Release
 
 on:
   push:
@@ -6,7 +6,33 @@ on:
       - main
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Install Black
+        run: pip install black
+        
+      - name: Run Black
+        run: black invoicingbackend/
+        
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format python code with Black [skip ci]"
+          branch: ${{ github.ref_name }}
+
   changelog:
+    needs: format
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -14,6 +40,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          
+      - name: Pull latest changes
+        run: git pull origin ${{ github.ref_name }} --rebase
 
       - name: Conventional Changelog Action
         id: changelog
