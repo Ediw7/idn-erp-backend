@@ -46,3 +46,8 @@ jobs:
             backend-test \
             odoo -d test_db --db_host=localhost --db_user=odoo --db_password=odoo \
             -i invoicingbackend --test-enable --stop-after-init --log-level=test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
