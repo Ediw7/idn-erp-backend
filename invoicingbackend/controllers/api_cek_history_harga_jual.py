@@ -49,8 +49,15 @@ class ApiCekHistoryHargaJual(http.Controller):
                     mn = int(mn)
                     domain.append(("invoice_id.tgl_invoice", ">=", f"{yr}-{mn:02d}-01"))
                     import calendar
+
                     last_day = calendar.monthrange(yr, mn)[1]
-                    domain.append(("invoice_id.tgl_invoice", "<=", f"{yr}-{mn:02d}-{last_day:02d}"))
+                    domain.append(
+                        (
+                            "invoice_id.tgl_invoice",
+                            "<=",
+                            f"{yr}-{mn:02d}-{last_day:02d}",
+                        )
+                    )
                 except Exception as e:
                     pass
 
