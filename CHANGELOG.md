@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.2...v0.2.0) (2026-07-12)
+
+
+### Features
+
+* **history-harga:** update api search to use tgl_invoice with periode YYYY-MM ([4fc9b2f](https://github.com/Ediw7/idn-erp-backend/commit/4fc9b2f4f3f9203e63e1f75fcdeba9697c42b322))
+
+
+
 ## [0.1.2](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.1...v0.1.2) (2026-07-12)
 
 
