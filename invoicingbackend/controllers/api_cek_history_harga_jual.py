@@ -41,13 +41,25 @@ class ApiCekHistoryHargaJual(http.Controller):
             elif nama_barang:
                 domain.append(("item_id.nama", "ilike", nama_barang))
 
+            if params.get("periode"):
+                # periode from frontend is expected to be "YYYY-MM"
+                try:
+                    yr, mn = params["periode"].split("-")
+                    yr = int(yr)
+                    mn = int(mn)
+                    domain.append(("invoice_id.tgl_invoice", ">=", f"{yr}-{mn:02d}-01"))
+                    import calendar
+                    last_day = calendar.monthrange(yr, mn)[1]
+                    domain.append(("invoice_id.tgl_invoice", "<=", f"{yr}-{mn:02d}-{last_day:02d}"))
+                except Exception as e:
+                    pass
+
             if nama_pelanggan:
                 domain.append(("invoice_id.pelanggan_id.nama", "ilike", nama_pelanggan))
 
             # Query the lines, ordered by invoice date descending
-            # limit can be 0 or None to mean "Show All"
             line_records = request.env["invoicingbackend.invoice_line"].search(
-                domain, order="id desc", limit=limit if limit > 0 else None
+                domain, order="id desc"
             )
 
             data = []
