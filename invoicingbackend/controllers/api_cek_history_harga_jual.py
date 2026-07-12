@@ -22,7 +22,9 @@ class ApiCekHistoryHargaJual(http.Controller):
 
             kode_barang = params.get("kode_barang") or kwargs.get("kode_barang")
             nama_barang = params.get("nama_barang") or kwargs.get("nama_barang")
-            nama_pelanggan = params.get("nama_pelanggan") or kwargs.get("nama_pelanggan")
+            nama_pelanggan = params.get("nama_pelanggan") or kwargs.get(
+                "nama_pelanggan"
+            )
             limit = int(params.get("limit", kwargs.get("limit", 25)))
 
             domain = [
@@ -31,13 +33,13 @@ class ApiCekHistoryHargaJual(http.Controller):
             ]
 
             if kode_barang and nama_barang:
-                domain.append('|')
-                domain.append(('item_id.kode', 'ilike', kode_barang))
-                domain.append(('item_id.nama', 'ilike', nama_barang))
+                domain.append("|")
+                domain.append(("item_id.kode", "ilike", kode_barang))
+                domain.append(("item_id.nama", "ilike", nama_barang))
             elif kode_barang:
-                domain.append(('item_id.kode', 'ilike', kode_barang))
+                domain.append(("item_id.kode", "ilike", kode_barang))
             elif nama_barang:
-                domain.append(('item_id.nama', 'ilike', nama_barang))
+                domain.append(("item_id.nama", "ilike", nama_barang))
 
             if nama_pelanggan:
                 domain.append(("invoice_id.pelanggan_id.nama", "ilike", nama_pelanggan))
