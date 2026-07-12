@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.1...v0.1.2) (2026-07-12)
+
+
+### Bug Fixes
+
+* **history-harga:** fix kwargs search domain and null is_void bug ([1b5dded](https://github.com/Ediw7/idn-erp-backend/commit/1b5dded691da1867c6b51f36e2e023190b156fbd))
+
+
+
 ## [0.1.1](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.0...v0.1.1) (2026-07-11)
 
 
