@@ -20,27 +20,32 @@ class ApiCekHistoryHargaJual(http.Controller):
         try:
             params = request.jsonrequest.get("params", {})
 
-            kode_barang = params.get("kode_barang")
-            nama_barang = params.get("nama_barang")
-            nama_pelanggan = params.get("nama_pelanggan")
-            limit = int(params.get("limit", 25))
+            kode_barang = params.get("kode_barang") or kwargs.get("kode_barang")
+            nama_barang = params.get("nama_barang") or kwargs.get("nama_barang")
+            nama_pelanggan = params.get("nama_pelanggan") or kwargs.get("nama_pelanggan")
+            limit = int(params.get("limit", kwargs.get("limit", 25)))
 
             domain = [
                 ("invoice_id.company_id", "=", request.env.user.company_id.id),
-                ("invoice_id.is_void", "=", False),
+                ("invoice_id.is_void", "!=", True),
             ]
 
-            if kode_barang:
-                domain.append(("item_id.kode", "ilike", kode_barang))
-            if nama_barang:
-                domain.append(("item_id.nama", "ilike", nama_barang))
+            if kode_barang and nama_barang:
+                domain.append('|')
+                domain.append(('item_id.kode', 'ilike', kode_barang))
+                domain.append(('item_id.nama', 'ilike', nama_barang))
+            elif kode_barang:
+                domain.append(('item_id.kode', 'ilike', kode_barang))
+            elif nama_barang:
+                domain.append(('item_id.nama', 'ilike', nama_barang))
+
             if nama_pelanggan:
                 domain.append(("invoice_id.pelanggan_id.nama", "ilike", nama_pelanggan))
 
             # Query the lines, ordered by invoice date descending
             # limit can be 0 or None to mean "Show All"
             line_records = request.env["invoicingbackend.invoice_line"].search(
-                domain, order="create_date desc", limit=limit if limit > 0 else None
+                domain, order="id desc", limit=limit if limit > 0 else None
             )
 
             data = []

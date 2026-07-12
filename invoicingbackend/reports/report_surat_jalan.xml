@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 1. Mendefinisikan Action Report -->
+        <record id="action_report_surat_jalan" model="ir.actions.report">
+            <field name="name">Cetak Surat Jalan</field>
+            <field name="model">invoicingbackend.surat_jalan</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">invoicingbackend.report_surat_jalan_template</field>
+            <field name="report_file">invoicingbackend.report_surat_jalan_template</field>
+            <field name="print_report_name">'Surat Jalan - %s' % (object.no_sj)</field>
+            <field name="binding_model_id" ref="model_invoicingbackend_surat_jalan"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- 2. Mendefinisikan QWeb Template -->
+        <template id="report_surat_jalan_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 class="mt-4 mb-4 text-center"><strong>SURAT JALAN</strong></h2>
+                            
+                            <!-- Header Info -->
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>No. Surat Jalan:</strong> <span t-field="doc.no_sj"/><br/>
+                                    <strong>Tanggal:</strong> <span t-field="doc.tgl_sj"/><br/>
+                                    <strong>No. SO / Ref:</strong> <span t-esc="doc.so_id.no_so if doc.so_id else '-'"/><br/>
+                                    <strong>No. PO / Ref:</strong> <span t-field="doc.no_po"/><br/>
+                                    <strong>Kendaraan:</strong> <span t-field="doc.no_kendaraan"/><br/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Dikirim Kepada:</strong><br/>
+                                    <span t-field="doc.pelanggan_id.nama"/><br/>
+                                    <span t-field="doc.alamat_kirim"/><br/>
+                                </div>
+                            </div>
+
+                            <!-- Table Items -->
+                            <table class="table table-sm table-bordered mt-4">
+                                <thead style="background-color: #f8f9fa;">
+                                    <tr>
+                                        <th class="text-center" style="width: 5%">No</th>
+                                        <th style="width: 45%">Nama Barang</th>
+                                        <th class="text-center" style="width: 15%">Kuantitas</th>
+                                        <th class="text-center" style="width: 15%">Satuan</th>
+                                        <th style="width: 20%">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="no" t-value="1"/>
+                                    <t t-foreach="doc.line_ids" t-as="line">
+                                        <tr>
+                                            <td class="text-center"><span t-esc="no"/></td>
+                                            <td>
+                                                <span t-esc="line.item_id.kode"/> - <span t-field="line.nama_barang"/>
+                                            </td>
+                                            <td class="text-center"><span t-field="line.kuantum"/></td>
+                                            <td class="text-center"><span t-field="line.satuan"/></td>
+                                            <td><span t-field="line.keterangan"/></td>
+                                        </tr>
+                                        <t t-set="no" t-value="no + 1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div class="row mt-3" t-if="doc.keterangan">
+                                <div class="col-12">
+                                    <strong>Catatan Pengiriman:</strong>
+                                    <p t-field="doc.keterangan"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Signatures -->
+                            <div class="row mt-5">
+                                <div class="col-4 text-center">
+                                    <p>Penerima,</p>
+                                    <br/><br/><br/>
+                                    <p>(.........................)</p>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <p>Pengemudi,</p>
+                                    <br/><br/><br/>
+                                    <p>(.........................)</p>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <p>Hormat Kami,</p>
+                                    <br/><br/><br/>
+                                    <p>(.........................)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

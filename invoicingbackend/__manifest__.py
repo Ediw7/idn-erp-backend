@@ -12,6 +12,9 @@
         "security/rules.xml",
         "views/setup_pelanggan_views.xml",
         "views/res_company_views.xml",
+        "reports/report_invoice.xml",
+        "reports/report_surat_jalan.xml",
+        "reports/report_sales_order.xml"
     ],
     "installable": True,
     "application": True,

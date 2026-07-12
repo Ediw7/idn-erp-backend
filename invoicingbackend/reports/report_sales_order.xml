@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 1. Mendefinisikan Action Report -->
+        <record id="action_report_sales_order" model="ir.actions.report">
+            <field name="name">Cetak Sales Order</field>
+            <field name="model">invoicingbackend.sales_order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">invoicingbackend.report_sales_order_template</field>
+            <field name="report_file">invoicingbackend.report_sales_order_template</field>
+            <field name="print_report_name">'Sales Order - %s' % (object.no_so)</field>
+            <field name="binding_model_id" ref="model_invoicingbackend_sales_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- 2. Mendefinisikan QWeb Template -->
+        <template id="report_sales_order_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 class="mt-4 mb-4 text-center"><strong>SALES ORDER</strong></h2>
+                            
+                            <!-- Header Info -->
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>No. SO:</strong> <span t-field="doc.no_so"/><br/>
+                                    <strong>Tanggal SO:</strong> <span t-field="doc.tgl_so"/><br/>
+                                    <strong>No. PO Pelanggan:</strong> <span t-field="doc.no_po"/><br/>
+                                    <strong>Dipesan Oleh:</strong> <span t-field="doc.dipesan_oleh"/><br/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Pelanggan:</strong><br/>
+                                    <span t-field="doc.pelanggan_id.nama"/><br/>
+                                    <span t-field="doc.alamat_kirim"/><br/>
+                                </div>
+                            </div>
+
+                            <!-- Table Items -->
+                            <table class="table table-sm table-bordered mt-4">
+                                <thead style="background-color: #f8f9fa;">
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th>Nama Barang</th>
+                                        <th class="text-right">Qty</th>
+                                        <th class="text-center">Satuan</th>
+                                        <th class="text-right">Harga Satuan</th>
+                                        <th class="text-right">Diskon</th>
+                                        <th class="text-right">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="no" t-value="1"/>
+                                    <t t-foreach="doc.line_ids" t-as="line">
+                                        <tr>
+                                            <td class="text-center"><span t-esc="no"/></td>
+                                            <td>
+                                                <span t-esc="line.item_id.kode"/> - <span t-field="line.nama_barang"/><br/>
+                                                <small class="text-muted" t-if="line.keterangan"><span t-field="line.keterangan"/></small>
+                                            </td>
+                                            <td class="text-right"><span t-field="line.kuantum"/></td>
+                                            <td class="text-center"><span t-field="line.satuan"/></td>
+                                            <td class="text-right">
+                                                <span t-esc="line.harga_satuan" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="line.disc_harga" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="line.harga_jual" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="no" t-value="no + 1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Totals -->
+                            <div class="row justify-content-end mt-4">
+                                <div class="col-5">
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td><strong>Subtotal</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.subtotal" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                        </tr>
+                                        <tr t-if="doc.potongan_harga > 0">
+                                            <td><strong>Potongan Harga</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.potongan_harga" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                        </tr>
+                                        <tr t-if="doc.ppn_amount > 0">
+                                            <td><strong>PPN (<span t-field="doc.ppn_persen"/>%)</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.ppn_amount" t-options='{"widget": "float", "precision": 0}'/>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-top: 2px solid #333;">
+                                            <td><strong>Total</strong></td>
+                                            <td class="text-right">
+                                                <strong>
+                                                    Rp <span t-field="doc.total" t-options='{"widget": "float", "precision": 0}'/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-5">
+                                <div class="col-4 text-center">
+                                    <p>Disetujui Oleh,</p>
+                                    <br/><br/><br/>
+                                    <p>(.........................)</p>
+                                </div>
+                                <div class="col-4 text-center">
+                                    
+                                </div>
+                                <div class="col-4 text-center">
+                                    <p>Pembuat,</p>
+                                    <br/><br/><br/>
+                                    <p>(.........................)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

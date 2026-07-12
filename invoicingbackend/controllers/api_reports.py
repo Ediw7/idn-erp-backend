@@ -30,35 +30,65 @@ class ApiReports(http.Controller):
 
             _logger.info(f"Generating PDF for: {report_type} | Filters: {filters}")
 
-            # Di environment production, ini akan memanggil engine wkhtmltopdf Odoo:
-            # pdf_content, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('module.report_id', res_ids)
-
-            # Fallback: Buat PDF valid yang sangat sederhana (Minimal PDF Spec)
-            # Ini memastikan frontend tidak error saat 파parsing Blob PDF
-            minimal_pdf = (
-                b"%PDF-1.4\n"
-                b"1 0 obj <</Type /Catalog /Pages 2 0 R>> endobj\n"
-                b"2 0 obj <</Type /Pages /Kids [3 0 R] /Count 1>> endobj\n"
-                b"3 0 obj <</Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources <<>> /Contents 4 0 R>> endobj\n"
-                b"4 0 obj <</Length 53>> stream\n"
-                b"BT\n/F1 24 Tf\n100 700 Td\n(Laporan: "
-                + str(report_type).encode("utf-8")
-                + b") Tj\nET\n"
-                b"endstream endobj\n"
-                b"xref\n0 5\n0000000000 65535 f\n0000000009 00000 n\n0000000056 00000 n\n0000000111 00000 n\n0000000212 00000 n\n"
-                b"trailer <</Size 5 /Root 1 0 R>>\n"
-                b"startxref\n314\n"
-                b"%%EOF\n"
-            )
+            if str(report_type).startswith('inv_'):
+                no_invoice = filters.get('dari_no_invoice')
+                if not no_invoice:
+                    raise ValueError("Nomor Invoice (dari_no_invoice) tidak ditemukan di filter")
+                    
+                invoice_id = request.env['invoicingbackend.invoice'].sudo().search([('no_invoice', '=', no_invoice)], limit=1).id
+                
+                if not invoice_id:
+                    raise ValueError(f"Invoice dengan nomor {no_invoice} tidak ditemukan di database")
+                
+                pdf_content, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('invoicingbackend.action_report_invoice', [invoice_id])
+                
+            elif str(report_type).startswith('sj_'):
+                no_sj = filters.get('dari_no_sj')
+                if not no_sj:
+                    raise ValueError("Nomor Surat Jalan (dari_no_sj) tidak ditemukan di filter")
+                    
+                sj_id = request.env['invoicingbackend.surat_jalan'].sudo().search([('no_sj', '=', no_sj)], limit=1).id
+                        
+                if not sj_id:
+                    raise ValueError(f"Surat Jalan dengan nomor {no_sj} tidak ditemukan di database")
+                    
+                pdf_content, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('invoicingbackend.action_report_surat_jalan', [sj_id])
+                
+            elif str(report_type).startswith('so_'):
+                no_so = filters.get('dari_no_so')
+                if not no_so:
+                    raise ValueError("Nomor Sales Order (dari_no_so) tidak ditemukan di filter")
+                    
+                so_id = request.env['invoicingbackend.sales_order'].sudo().search([('no_so', '=', no_so)], limit=1).id
+                        
+                if not so_id:
+                    raise ValueError(f"Sales Order dengan nomor {no_so} tidak ditemukan di database")
+                    
+                pdf_content, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('invoicingbackend.action_report_sales_order', [so_id])
+                
+            else:
+                # Fallback untuk tipe laporan lain yang belum diimplementasikan
+                pdf_content = (
+                    b"%PDF-1.4\n"
+                    b"1 0 obj <</Type /Catalog /Pages 2 0 R>> endobj\n"
+                    b"2 0 obj <</Type /Pages /Kids [3 0 R] /Count 1>> endobj\n"
+                    b"3 0 obj <</Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources <<>> /Contents 4 0 R>> endobj\n"
+                    b"4 0 obj <</Length 53>> stream\n"
+                    b"BT\n/F1 24 Tf\n100 700 Td\n(Laporan: " + str(report_type).encode('utf-8') + b") Tj\nET\n"
+                    b"endstream endobj\n"
+                    b"xref\n0 5\n0000000000 65535 f\n0000000009 00000 n\n0000000056 00000 n\n0000000111 00000 n\n0000000212 00000 n\n"
+                    b"trailer <</Size 5 /Root 1 0 R>>\n"
+                    b"startxref\n314\n"
+                    b"%%EOF\n"
+                )
 
             headers = [
                 ("Content-Type", "application/pdf"),
                 ("Content-Disposition", f'inline; filename="{report_type}.pdf"'),
                 ("Access-Control-Allow-Origin", "*"),
             ]
-
-            return request.make_response(minimal_pdf, headers=headers)
-
+            
+            return request.make_response(pdf_content, headers=headers)
         except Exception as e:
             _logger.error("Error generating report API: %s", str(e))
             return request.make_response(
