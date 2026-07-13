@@ -59,10 +59,30 @@ class Invoice(models.Model):
     line_ids = fields.One2many(
         "invoicingbackend.invoice_line", "invoice_id", string="Detail Invoice"
     )
+
+    def unlink(self):
+        for record in self:
+            kwitansi_count = self.env['invoicingbackend.kwitansi'].search_count([('invoice_id', '=', record.id)])
+            if kwitansi_count > 0:
+                raise models.ValidationError("Tidak bisa menghapus Invoice yang sudah memiliki pembayaran/kwitansi.")
+        return super(Invoice, self).unlink()
+
+    def write(self, vals):
+        if vals.get('is_void'):
+            for record in self:
+                kwitansi_count = self.env['invoicingbackend.kwitansi'].search_count([('invoice_id', '=', record.id)])
+                if kwitansi_count > 0:
+                    raise models.ValidationError("Tidak bisa membatalkan (Void) Invoice yang sudah memiliki pembayaran/kwitansi.")
+        return super(Invoice, self).write(vals)
     pembayaran_line_ids = fields.One2many(
         "invoicingbackend.pembayaran_piutang_line",
         "invoice_id",
         string="Histori Pembayaran",
+    )
+    kwitansi_ids = fields.One2many(
+        "invoicingbackend.kwitansi",
+        "invoice_id",
+        string="Histori Kwitansi",
     )
 
     @api.depends(
@@ -90,6 +110,7 @@ class Invoice(models.Model):
         "pembayaran_line_ids.pembayaran",
         "pembayaran_line_ids.potongan",
         "pembayaran_line_ids.pembayaran_id.is_void",
+        "kwitansi_ids.jumlah",
     )
     def _compute_terbayar(self):
         for record in self:
@@ -98,7 +119,11 @@ class Invoice(models.Model):
                 lambda l: not l.pembayaran_id.is_void
             )
             total_bayar = sum(p.pembayaran + p.potongan for p in valid_payments)
-            record.total_terbayar = total_bayar
+            
+            # Hitung juga pembayaran via Kwitansi
+            total_kwitansi = sum(k.jumlah for k in record.kwitansi_ids)
+            
+            record.total_terbayar = total_bayar + total_kwitansi
 
     @api.depends("total", "total_terbayar")
     def _compute_saldo(self):

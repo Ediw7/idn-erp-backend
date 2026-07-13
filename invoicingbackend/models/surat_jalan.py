@@ -32,6 +32,19 @@ class SuratJalan(models.Model):
         "invoicingbackend.surat_jalan_line", "sj_id", string="Detail Surat Jalan"
     )
 
+    def unlink(self):
+        for record in self:
+            if record.invoice_id or self.env['invoicingbackend.invoice'].search_count([('surat_jalan_ids', '=', record.id)]) > 0:
+                raise models.ValidationError("Tidak bisa menghapus Surat Jalan yang sudah ditagihkan (Invoice).")
+        return super(SuratJalan, self).unlink()
+
+    def write(self, vals):
+        if vals.get('is_void'):
+            for record in self:
+                if record.invoice_id or self.env['invoicingbackend.invoice'].search_count([('surat_jalan_ids', '=', record.id)]) > 0:
+                    raise models.ValidationError("Tidak bisa membatalkan (Void) Surat Jalan yang sudah ditagihkan (Invoice).")
+        return super(SuratJalan, self).write(vals)
+
 
 class SuratJalanLine(models.Model):
     _name = "invoicingbackend.surat_jalan_line"

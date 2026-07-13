@@ -97,7 +97,7 @@ class ApiKwitansi(http.Controller):
                 "no_kwitansi": data.get("no_kwitansi"),
                 "tgl_kwitansi": data.get("tgl_kwitansi"),
                 "jenis": data.get("jenis", "VAT"),
-                "invoice_id": data.get("invoice_id"),
+                "invoice_id": data.get("invoice_id") or None,
                 "pelanggan_id": data.get("pelanggan_id"),
                 "mata_uang": data.get("mata_uang", "IDR"),
                 "jumlah": float(data.get("jumlah", 0.0)),

@@ -83,6 +83,25 @@ class SalesOrder(models.Model):
             else:
                 record.is_closed = False
 
+    def unlink(self):
+        for record in self:
+            sj_count = self.env['invoicingbackend.surat_jalan'].search_count([('so_id', '=', record.id)])
+            if sj_count > 0:
+                raise models.ValidationError("Tidak bisa menghapus Sales Order yang sudah memiliki Surat Jalan terkait.")
+            if record.invoice_ids:
+                raise models.ValidationError("Tidak bisa menghapus Sales Order yang sudah memiliki Tagihan (Invoice) terkait.")
+        return super(SalesOrder, self).unlink()
+
+    def write(self, vals):
+        if vals.get('is_void'):
+            for record in self:
+                sj_count = self.env['invoicingbackend.surat_jalan'].search_count([('so_id', '=', record.id)])
+                if sj_count > 0:
+                    raise models.ValidationError("Tidak bisa membatalkan (Void) Sales Order yang sudah memiliki Surat Jalan terkait.")
+                if record.invoice_ids:
+                    raise models.ValidationError("Tidak bisa membatalkan (Void) Sales Order yang sudah memiliki Tagihan (Invoice) terkait.")
+        return super(SalesOrder, self).write(vals)
+
 
 class SalesOrderLine(models.Model):
     _name = "invoicingbackend.sales_order_line"
