@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/Ediw7/idn-erp-backend/compare/v0.2.0...v0.3.0) (2026-07-13)
+
+
+### Features
+
+* **invoicing:** Implement robust backend validations and sync outstanding payment calculation ([34a9ea2](https://github.com/Ediw7/idn-erp-backend/commit/34a9ea2897040babcb3f6e7d92e8371611b67566))
+
+
+
 # [0.2.0](https://github.com/Ediw7/idn-erp-backend/compare/v0.1.2...v0.2.0) (2026-07-12)
 
 
