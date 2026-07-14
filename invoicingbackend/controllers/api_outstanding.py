@@ -67,7 +67,7 @@ class ApiOutstanding(http.Controller):
                             if rec.sales_order_id and rec.sales_order_id.salesman_id
                             else ""
                         ),
-                        "proyek": "",
+                        "proyek": rec.proyek_id.nama if rec.proyek_id else "",
                         "no_so": rec.sales_order_id.no_so if rec.sales_order_id else "",
                         "no_po": rec.sales_order_id.no_po if rec.sales_order_id else "",
                         "catatan": rec.keterangan or "",

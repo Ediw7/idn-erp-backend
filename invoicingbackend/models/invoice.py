@@ -25,6 +25,14 @@ class Invoice(models.Model):
     sales_order_id = fields.Many2one(
         "invoicingbackend.sales_order", string="Dari Sales Order", ondelete="restrict"
     )
+    proyek_id = fields.Many2one("invoicingbackend.proyek", string="Proyek")
+
+    no_po = fields.Char(string="No. PO")
+    tgl_po = fields.Date(string="Tgl PO")
+    tgl_jt = fields.Date(string="Tgl Jatuh Tempo")
+    pembayaran_id = fields.Many2one("invoicingbackend.pembayaran", string="Cara Pembayaran")
+    salesman_id = fields.Many2one("invoicingbackend.salesman", string="Salesman")
+    gudang_id = fields.Many2one("invoicingbackend.gudang", string="Gudang")
 
     no_fp = fields.Char(string="No. Faktur Pajak")
     tgl_fp = fields.Date(string="Tgl Faktur Pajak")

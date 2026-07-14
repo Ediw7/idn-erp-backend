@@ -101,7 +101,14 @@ class ApiInvoice(http.Controller):
                         "sales_order_id": (
                             rec.sales_order_id.id if rec.sales_order_id else ""
                         ),
+                        "proyek": rec.proyek_id.kode if rec.proyek_id else "",
                         "no_so": rec.sales_order_id.no_so if rec.sales_order_id else "",
+                        "no_po": rec.no_po or (rec.sales_order_id.no_po if rec.sales_order_id else ""),
+                        "tgl_po": str(rec.tgl_po) if rec.tgl_po else (str(rec.sales_order_id.tgl_po) if rec.sales_order_id and rec.sales_order_id.tgl_po else ""),
+                        "tgl_jt": str(rec.tgl_jt) if rec.tgl_jt else "",
+                        "cara_pembayaran": rec.pembayaran_id.nama if rec.pembayaran_id else (rec.sales_order_id.pembayaran_id.nama if rec.sales_order_id and rec.sales_order_id.pembayaran_id else ""),
+                        "salesman_id": rec.salesman_id.id if rec.salesman_id else (rec.sales_order_id.salesman_id.id if rec.sales_order_id and rec.sales_order_id.salesman_id else ""),
+                        "gudang_id": rec.gudang_id.id if rec.gudang_id else "",
                         "no_fp": rec.no_fp or "",
                         "tgl_fp": str(rec.tgl_fp) if rec.tgl_fp else "",
                         "keterangan": rec.keterangan or "",
@@ -196,6 +203,20 @@ class ApiInvoice(http.Controller):
                         status_code=400,
                     )
 
+            proyek_kode = data.get("proyek")
+            proyek_id = False
+            if proyek_kode:
+                proyek_rec = request.env["invoicingbackend.proyek"].search([("kode", "=", proyek_kode)], limit=1)
+                if proyek_rec:
+                    proyek_id = proyek_rec.id
+                    
+            pembayaran_nama = data.get("cara_pembayaran")
+            pembayaran_id = False
+            if pembayaran_nama:
+                p_rec = request.env["invoicingbackend.pembayaran"].search([("nama", "=", pembayaran_nama)], limit=1)
+                if p_rec:
+                    pembayaran_id = p_rec.id
+
             vals = {
                 "no_invoice": data.get("no_invoice"),
                 "tgl_invoice": data.get("tgl_invoice"),
@@ -205,6 +226,13 @@ class ApiInvoice(http.Controller):
                     found_sjs[0].id if len(found_sjs) > 0 else False
                 ),  # Fallback legacy
                 "sales_order_id": data.get("sales_order_id"),
+                "proyek_id": proyek_id,
+                "no_po": data.get("no_po"),
+                "tgl_po": data.get("tgl_po") or False,
+                "tgl_jt": data.get("tgl_jt") or False,
+                "pembayaran_id": pembayaran_id,
+                "salesman_id": data.get("salesman_id") or False,
+                "gudang_id": data.get("gudang_id") or False,
                 "no_fp": data.get("no_fp"),
                 "tgl_fp": data.get("tgl_fp") or False,
                 "keterangan": data.get("keterangan"),
@@ -236,7 +264,6 @@ class ApiInvoice(http.Controller):
                             "disc_persen": float(line.get("disc_persen", 0.0)),
                             "disc_harga": float(line.get("disc_harga", 0.0)),
                             "company_id": request.env.user.company_id.id,
-                            "is_void": data.get("is_void", False),
                         },
                     )
                 )
