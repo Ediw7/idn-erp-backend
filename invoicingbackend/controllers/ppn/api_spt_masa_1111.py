@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSptMasa1111(http.Controller):
 
     @http.route(
-        "/api/spt-masa/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/spt-masa/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_spt_masa(self, **kw):
         try:
@@ -60,7 +64,11 @@ class ApiSptMasa1111(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/spt-masa/create", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/spt-masa/create",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def create_spt_masa(self, **kw):
         try:
@@ -119,7 +127,11 @@ class ApiSptMasa1111(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/spt-masa/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/spt-masa/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def delete_spt_masa(self, **kw):
         try:

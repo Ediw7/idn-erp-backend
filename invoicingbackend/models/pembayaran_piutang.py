@@ -12,7 +12,10 @@ class PembayaranPiutang(models.Model):
     )
 
     pelanggan_id = fields.Many2one(
-        "invoicingbackend.setup_pelanggan", string="Pelanggan", required=True, index=True
+        "invoicingbackend.setup_pelanggan",
+        string="Pelanggan",
+        required=True,
+        index=True,
     )
 
     perkiraan_kas_id = fields.Many2one(

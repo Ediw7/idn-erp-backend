@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupBahasa(http.Controller):
 
     @http.route(
-        "/api/setup/bahasa/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/bahasa/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_bahasa(self, **kw):
         try:
@@ -28,7 +32,11 @@ class ApiSetupBahasa(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/bahasa/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/bahasa/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def save_bahasa(self, **kw):
         try:
@@ -61,7 +69,11 @@ class ApiSetupBahasa(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/bahasa/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/bahasa/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def delete_bahasa(self, **kw):
         try:

@@ -30,7 +30,9 @@ class Invoice(models.Model):
     no_po = fields.Char(string="No. PO")
     tgl_po = fields.Date(string="Tgl PO")
     tgl_jt = fields.Date(string="Tgl Jatuh Tempo")
-    pembayaran_id = fields.Many2one("invoicingbackend.pembayaran", string="Cara Pembayaran")
+    pembayaran_id = fields.Many2one(
+        "invoicingbackend.pembayaran", string="Cara Pembayaran"
+    )
     salesman_id = fields.Many2one("invoicingbackend.salesman", string="Salesman")
     gudang_id = fields.Many2one("invoicingbackend.gudang", string="Gudang")
 
@@ -155,7 +157,7 @@ class Invoice(models.Model):
         for record in self:
             tot_nk = sum(nk.nilai_nota_kredit for nk in record.nota_kredit_ids)
             record.total_nota_kredit = tot_nk
-            
+
             saldo = record.total - record.total_terbayar - tot_nk
             # Hindari minus kecil akibat pembulatan
             record.saldo_piutang = saldo if saldo > 0.01 else 0.0

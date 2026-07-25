@@ -6,32 +6,53 @@ import werkzeug.exceptions
 import json
 from odoo.http import Response
 
+
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = "ir.http"
 
     @classmethod
     def _handle_exception(cls, exception):
         # Tangkap jika error terjadi di endpoint /api/
-        if request.httprequest.path.startswith('/api/'):
-            if request.httprequest.method == 'OPTIONS':
+        if request.httprequest.path.startswith("/api/"):
+            if request.httprequest.method == "OPTIONS":
                 return Response(
                     status=200,
                     headers=[
-                        ('Access-Control-Allow-Origin', request.httprequest.headers.get('Origin', '*')),
-                        ('Access-Control-Allow-Credentials', 'true'),
-                        ('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE'),
-                        ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'),
-                    ]
+                        (
+                            "Access-Control-Allow-Origin",
+                            request.httprequest.headers.get("Origin", "*"),
+                        ),
+                        ("Access-Control-Allow-Credentials", "true"),
+                        (
+                            "Access-Control-Allow-Methods",
+                            "GET, POST, OPTIONS, PUT, DELETE",
+                        ),
+                        (
+                            "Access-Control-Allow-Headers",
+                            "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                        ),
+                    ],
                 )
             if isinstance(exception, SessionExpiredException):
                 return Response(
-                    json.dumps({"error": "Session expired or unauthorized", "code": 401}),
+                    json.dumps(
+                        {"error": "Session expired or unauthorized", "code": 401}
+                    ),
                     status=401,
                     headers=[
-                        ('Access-Control-Allow-Origin', request.httprequest.headers.get('Origin', '*')),
-                        ('Access-Control-Allow-Credentials', 'true'),
-                        ('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE'),
-                        ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'),
+                        (
+                            "Access-Control-Allow-Origin",
+                            request.httprequest.headers.get("Origin", "*"),
+                        ),
+                        ("Access-Control-Allow-Credentials", "true"),
+                        (
+                            "Access-Control-Allow-Methods",
+                            "GET, POST, OPTIONS, PUT, DELETE",
+                        ),
+                        (
+                            "Access-Control-Allow-Headers",
+                            "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                        ),
                     ],
                     content_type="application/json",
                 )
@@ -40,10 +61,19 @@ class IrHttp(models.AbstractModel):
                     json.dumps({"error": "Access Denied", "code": 403}),
                     status=403,
                     headers=[
-                        ('Access-Control-Allow-Origin', request.httprequest.headers.get('Origin', '*')),
-                        ('Access-Control-Allow-Credentials', 'true'),
-                        ('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE'),
-                        ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'),
+                        (
+                            "Access-Control-Allow-Origin",
+                            request.httprequest.headers.get("Origin", "*"),
+                        ),
+                        ("Access-Control-Allow-Credentials", "true"),
+                        (
+                            "Access-Control-Allow-Methods",
+                            "GET, POST, OPTIONS, PUT, DELETE",
+                        ),
+                        (
+                            "Access-Control-Allow-Headers",
+                            "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                        ),
                     ],
                     content_type="application/json",
                 )

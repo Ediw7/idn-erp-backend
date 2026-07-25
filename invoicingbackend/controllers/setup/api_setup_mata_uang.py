@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupMataUang(http.Controller):
 
     @http.route(
-        "/api/setup/matauang/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/matauang/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_mata_uang(self, **kw):
         try:
@@ -25,7 +29,11 @@ class ApiSetupMataUang(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/matauang/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/matauang/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def save_mata_uang(self, **kw):
         try:

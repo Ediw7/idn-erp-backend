@@ -48,11 +48,8 @@ class ApiReports(http.Controller):
                         f"Invoice dengan nomor {no_invoice} tidak ditemukan di database"
                     )
 
-                pdf_content, _ = (
-                    request.env["ir.actions.report"]
-                    ._render_qweb_pdf(
-                        "invoicingbackend.action_report_invoice", [invoice_id]
-                    )
+                pdf_content, _ = request.env["ir.actions.report"]._render_qweb_pdf(
+                    "invoicingbackend.action_report_invoice", [invoice_id]
                 )
 
             elif str(report_type).startswith("sj_"):
@@ -73,11 +70,8 @@ class ApiReports(http.Controller):
                         f"Surat Jalan dengan nomor {no_sj} tidak ditemukan di database"
                     )
 
-                pdf_content, _ = (
-                    request.env["ir.actions.report"]
-                    ._render_qweb_pdf(
-                        "invoicingbackend.action_report_surat_jalan", [sj_id]
-                    )
+                pdf_content, _ = request.env["ir.actions.report"]._render_qweb_pdf(
+                    "invoicingbackend.action_report_surat_jalan", [sj_id]
                 )
 
             elif str(report_type).startswith("so_"):
@@ -98,11 +92,8 @@ class ApiReports(http.Controller):
                         f"Sales Order dengan nomor {no_so} tidak ditemukan di database"
                     )
 
-                pdf_content, _ = (
-                    request.env["ir.actions.report"]
-                    ._render_qweb_pdf(
-                        "invoicingbackend.action_report_sales_order", [so_id]
-                    )
+                pdf_content, _ = request.env["ir.actions.report"]._render_qweb_pdf(
+                    "invoicingbackend.action_report_sales_order", [so_id]
                 )
 
             else:
@@ -133,7 +124,12 @@ class ApiReports(http.Controller):
         except Exception as e:
             _logger.error("Error generating report API: %s", str(e))
             return request.make_response(
-                json.dumps({"status": "error", "message": "Terjadi kesalahan internal peladen saat men-generate laporan."}),
+                json.dumps(
+                    {
+                        "status": "error",
+                        "message": "Terjadi kesalahan internal peladen saat men-generate laporan.",
+                    }
+                ),
                 status=500,
                 headers=[("Content-Type", "application/json")],
             )

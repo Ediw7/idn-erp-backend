@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupProyek(http.Controller):
 
     @http.route(
-        "/api/setup/proyek/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/proyek/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_proyek(self, **kw):
         try:
@@ -26,7 +30,11 @@ class ApiSetupProyek(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/proyek/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/proyek/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def save_proyek(self, **kw):
         try:
@@ -57,7 +65,11 @@ class ApiSetupProyek(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/proyek/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/proyek/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def delete_proyek(self, **kw):
         try:

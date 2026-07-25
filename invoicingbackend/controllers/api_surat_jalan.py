@@ -210,7 +210,11 @@ class ApiSuratJalan(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/surat_jalan/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/surat_jalan/auto-no",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def auto_no_sj(self, **kw):
         try:

@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiNotaRetur(http.Controller):
 
     @http.route(
-        "/api/nota-retur/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/nota-retur/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_nota_retur(self, **kw):
         try:
@@ -60,7 +64,11 @@ class ApiNotaRetur(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/nota-retur/create", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/nota-retur/create",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def create_nota_retur(self, **kw):
         try:
@@ -120,7 +128,11 @@ class ApiNotaRetur(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/nota-retur/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/nota-retur/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def delete_nota_retur(self, **kw):
         try:
@@ -132,7 +144,11 @@ class ApiNotaRetur(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/nota-retur/autono", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/nota-retur/autono",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def autono_nota_retur(self, **kw):
         return {"status": "success", "no_nota": "RJ/00X/03/2026"}

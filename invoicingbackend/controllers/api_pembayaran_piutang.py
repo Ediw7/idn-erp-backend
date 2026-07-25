@@ -213,7 +213,11 @@ class ApiPembayaranPiutang(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/pembayaran/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/pembayaran/auto-no",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def auto_no_pembayaran(self, **kw):
         try:

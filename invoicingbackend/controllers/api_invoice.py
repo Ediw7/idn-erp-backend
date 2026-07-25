@@ -24,11 +24,13 @@ class ApiInvoice(http.Controller):
             domain = [("company_id", "=", request.env.user.company_id.id)]
             limit = int(kwargs.get("limit", 2000))
             page = kwargs.get("page")
-            
+
             if page:
                 page = int(page)
                 offset = (page - 1) * limit
-                total_records = request.env["invoicingbackend.invoice"].search_count(domain)
+                total_records = request.env["invoicingbackend.invoice"].search_count(
+                    domain
+                )
                 records = request.env["invoicingbackend.invoice"].search(
                     domain, order="tgl_invoice desc", limit=limit, offset=offset
                 )
@@ -114,11 +116,37 @@ class ApiInvoice(http.Controller):
                         ),
                         "proyek": rec.proyek_id.kode if rec.proyek_id else "",
                         "no_so": rec.sales_order_id.no_so if rec.sales_order_id else "",
-                        "no_po": rec.no_po or (rec.sales_order_id.no_po if rec.sales_order_id else ""),
-                        "tgl_po": str(rec.tgl_po) if rec.tgl_po else (str(rec.sales_order_id.tgl_po) if rec.sales_order_id and rec.sales_order_id.tgl_po else ""),
+                        "no_po": rec.no_po
+                        or (rec.sales_order_id.no_po if rec.sales_order_id else ""),
+                        "tgl_po": (
+                            str(rec.tgl_po)
+                            if rec.tgl_po
+                            else (
+                                str(rec.sales_order_id.tgl_po)
+                                if rec.sales_order_id and rec.sales_order_id.tgl_po
+                                else ""
+                            )
+                        ),
                         "tgl_jt": str(rec.tgl_jt) if rec.tgl_jt else "",
-                        "cara_pembayaran": rec.pembayaran_id.nama if rec.pembayaran_id else (rec.sales_order_id.pembayaran_id.nama if rec.sales_order_id and rec.sales_order_id.pembayaran_id else ""),
-                        "salesman_id": rec.salesman_id.id if rec.salesman_id else (rec.sales_order_id.salesman_id.id if rec.sales_order_id and rec.sales_order_id.salesman_id else ""),
+                        "cara_pembayaran": (
+                            rec.pembayaran_id.nama
+                            if rec.pembayaran_id
+                            else (
+                                rec.sales_order_id.pembayaran_id.nama
+                                if rec.sales_order_id
+                                and rec.sales_order_id.pembayaran_id
+                                else ""
+                            )
+                        ),
+                        "salesman_id": (
+                            rec.salesman_id.id
+                            if rec.salesman_id
+                            else (
+                                rec.sales_order_id.salesman_id.id
+                                if rec.sales_order_id and rec.sales_order_id.salesman_id
+                                else ""
+                            )
+                        ),
                         "gudang_id": rec.gudang_id.id if rec.gudang_id else "",
                         "no_fp": rec.no_fp or "",
                         "tgl_fp": str(rec.tgl_fp) if rec.tgl_fp else "",
@@ -139,11 +167,17 @@ class ApiInvoice(http.Controller):
                 )
             if page:
                 import math
-                return ApiResponse.success(data=data, pagination={
-                    "total": total_records,
-                    "page": page,
-                    "last_page": math.ceil(total_records / limit) if total_records > 0 else 1
-                })
+
+                return ApiResponse.success(
+                    data=data,
+                    pagination={
+                        "total": total_records,
+                        "page": page,
+                        "last_page": (
+                            math.ceil(total_records / limit) if total_records > 0 else 1
+                        ),
+                    },
+                )
             return ApiResponse.success(data=data)
         except Exception as e:
             _logger.error(f"Error fetching invoices: {str(e)}")
@@ -224,14 +258,18 @@ class ApiInvoice(http.Controller):
             proyek_kode = data.get("proyek")
             proyek_id = False
             if proyek_kode:
-                proyek_rec = request.env["invoicingbackend.proyek"].search([("kode", "=", proyek_kode)], limit=1)
+                proyek_rec = request.env["invoicingbackend.proyek"].search(
+                    [("kode", "=", proyek_kode)], limit=1
+                )
                 if proyek_rec:
                     proyek_id = proyek_rec.id
-                    
+
             pembayaran_nama = data.get("cara_pembayaran")
             pembayaran_id = False
             if pembayaran_nama:
-                p_rec = request.env["invoicingbackend.pembayaran"].search([("nama", "=", pembayaran_nama)], limit=1)
+                p_rec = request.env["invoicingbackend.pembayaran"].search(
+                    [("nama", "=", pembayaran_nama)], limit=1
+                )
                 if p_rec:
                     pembayaran_id = p_rec.id
 
@@ -377,7 +415,11 @@ class ApiInvoice(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/invoice/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/invoice/auto-no",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def auto_no_invoice(self, **kw):
         try:

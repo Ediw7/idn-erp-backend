@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupPerkiraan(http.Controller):
 
     @http.route(
-        "/api/setup/perkiraan/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/perkiraan/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_perkiraan(self, **kw):
         try:

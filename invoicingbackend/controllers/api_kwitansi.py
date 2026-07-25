@@ -156,7 +156,11 @@ class ApiKwitansi(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/kwitansi/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/kwitansi/auto-no",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def auto_no_kwitansi(self, **kw):
         try:

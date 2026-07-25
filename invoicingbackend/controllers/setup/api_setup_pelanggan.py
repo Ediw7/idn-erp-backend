@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupPelanggan(http.Controller):
 
     @http.route(
-        "/api/setup/pelanggan/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/pelanggan/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_pelanggan(self, **kw):
         try:

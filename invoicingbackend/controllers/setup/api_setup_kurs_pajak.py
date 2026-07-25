@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupKursPajak(http.Controller):
 
     @http.route(
-        "/api/setup/kurspajak/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/kurspajak/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_kurs_pajak(self, **kw):
         try:

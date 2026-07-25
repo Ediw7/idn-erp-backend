@@ -10,16 +10,28 @@ except ImportError:
     try:
         from ..utils import success_response, error_response
     except ImportError:
+
         def success_response(message="Success", data=None, meta=None):
             resp = {"status": "success", "message": message}
-            if data is not None: resp["data"] = data
-            if meta is not None: resp["meta"] = meta
-            return request.make_response(json.dumps(resp), headers=[("Content-Type", "application/json")])
+            if data is not None:
+                resp["data"] = data
+            if meta is not None:
+                resp["meta"] = meta
+            return request.make_response(
+                json.dumps(resp), headers=[("Content-Type", "application/json")]
+            )
+
         def error_response(message="Error", status=400):
             resp = {"status": "error", "message": message}
-            return request.make_response(json.dumps(resp), status=status, headers=[("Content-Type", "application/json")])
+            return request.make_response(
+                json.dumps(resp),
+                status=status,
+                headers=[("Content-Type", "application/json")],
+            )
+
 
 _logger = logging.getLogger(__name__)
+
 
 class ApiFakturPajak(http.Controller):
 
@@ -53,7 +65,11 @@ class ApiFakturPajak(http.Controller):
                     else f"{year}-{month}-30"
                 )
                 if month == "02":
-                    end_date = f"{year}-{month}-29" if int(year) % 4 == 0 else f"{year}-{month}-28"
+                    end_date = (
+                        f"{year}-{month}-29"
+                        if int(year) % 4 == 0
+                        else f"{year}-{month}-28"
+                    )
                 domain.append(("tgl_fp", ">=", start_date))
                 domain.append(("tgl_fp", "<=", end_date))
 
@@ -66,7 +82,9 @@ class ApiFakturPajak(http.Controller):
             records = request.env["invoicingbackend.transaksi_faktur_pajak"].search(
                 domain, order="tgl_fp desc, id desc", limit=limit, offset=offset
             )
-            total_count = request.env["invoicingbackend.transaksi_faktur_pajak"].search_count(domain)
+            total_count = request.env[
+                "invoicingbackend.transaksi_faktur_pajak"
+            ].search_count(domain)
 
             data = []
             for rec in records:
@@ -94,10 +112,16 @@ class ApiFakturPajak(http.Controller):
                         "pembeli_id": rec.pembeli_id.id if rec.pembeli_id else None,
                         "pembeli_nama": rec.pembeli_id.nama if rec.pembeli_id else "",
                         "pembeli_npwp": rec.pembeli_id.npwp if rec.pembeli_id else "",
-                        "alamat": rec.pembeli_id.alamat_wp or rec.pembeli_id.alamat or "",
+                        "alamat": rec.pembeli_id.alamat_wp
+                        or rec.pembeli_id.alamat
+                        or "",
                         "npwp": rec.pembeli_id.npwp or "",
                         "fp_diganti": rec.fp_diganti or "",
-                        "tgl_fp_diganti": rec.tgl_fp_diganti.strftime("%Y-%m-%d") if rec.tgl_fp_diganti else "",
+                        "tgl_fp_diganti": (
+                            rec.tgl_fp_diganti.strftime("%Y-%m-%d")
+                            if rec.tgl_fp_diganti
+                            else ""
+                        ),
                         "jenis_transaksi": rec.jenis_transaksi or "",
                         "jenis_status": rec.jenis_status or "",
                         "no_invoice": rec.no_invoice or "",
@@ -174,7 +198,11 @@ class ApiFakturPajak(http.Controller):
                 "alamat": rec.pembeli_id.alamat_wp or rec.pembeli_id.alamat or "",
                 "npwp": rec.pembeli_id.npwp or "",
                 "fp_diganti": rec.fp_diganti or "",
-                "tgl_fp_diganti": rec.tgl_fp_diganti.strftime("%Y-%m-%d") if rec.tgl_fp_diganti else "",
+                "tgl_fp_diganti": (
+                    rec.tgl_fp_diganti.strftime("%Y-%m-%d")
+                    if rec.tgl_fp_diganti
+                    else ""
+                ),
                 "jenis_transaksi": rec.jenis_transaksi or "",
                 "jenis_status": rec.jenis_status or "",
                 "no_invoice": rec.no_invoice or "",
@@ -316,15 +344,21 @@ class ApiFakturPajak(http.Controller):
 
                 line_id = line_data.get("id")
                 if line_id and line_id in existing_line_ids:
-                    request.env["invoicingbackend.transaksi_faktur_pajak_line"].browse(line_id).write(line_vals)
+                    request.env["invoicingbackend.transaksi_faktur_pajak_line"].browse(
+                        line_id
+                    ).write(line_vals)
                     new_line_ids.append(line_id)
                 else:
-                    new_line = request.env["invoicingbackend.transaksi_faktur_pajak_line"].create(line_vals)
+                    new_line = request.env[
+                        "invoicingbackend.transaksi_faktur_pajak_line"
+                    ].create(line_vals)
                     new_line_ids.append(new_line.id)
 
             lines_to_delete = set(existing_line_ids) - set(new_line_ids)
             if lines_to_delete:
-                request.env["invoicingbackend.transaksi_faktur_pajak_line"].browse(list(lines_to_delete)).unlink()
+                request.env["invoicingbackend.transaksi_faktur_pajak_line"].browse(
+                    list(lines_to_delete)
+                ).unlink()
 
             return success_response("Berhasil diperbarui", {"id": rec.id})
         except Exception as e:
@@ -351,4 +385,3 @@ class ApiFakturPajak(http.Controller):
         except Exception as e:
             _logger.error("Error delete_faktur_pajak: %s", str(e))
             return error_response(str(e))
-

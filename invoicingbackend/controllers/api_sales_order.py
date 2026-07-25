@@ -6,7 +6,11 @@ from datetime import datetime
 class ApiSalesOrder(http.Controller):
 
     @http.route(
-        "/api/sales-order/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/sales-order/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_sales_order(self, **kw):
         try:
@@ -29,11 +33,13 @@ class ApiSalesOrder(http.Controller):
 
             limit = int(params.get("limit", 2000))
             page = params.get("page")
-            
+
             if page:
                 page = int(page)
                 offset = (page - 1) * limit
-                total_records = request.env["invoicingbackend.sales_order"].search_count(domain)
+                total_records = request.env[
+                    "invoicingbackend.sales_order"
+                ].search_count(domain)
                 records = request.env["invoicingbackend.sales_order"].search(
                     domain, order="tgl_so desc, no_so desc", limit=limit, offset=offset
                 )
@@ -160,21 +166,28 @@ class ApiSalesOrder(http.Controller):
                 )
             if page:
                 import math
+
                 return {
                     "status": "success",
                     "data": data,
                     "pagination": {
                         "total": total_records,
                         "page": page,
-                        "last_page": math.ceil(total_records / limit) if total_records > 0 else 1
-                    }
+                        "last_page": (
+                            math.ceil(total_records / limit) if total_records > 0 else 1
+                        ),
+                    },
                 }
             return {"status": "success", "data": data}
         except Exception as e:
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/sales-order/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def save_sales_order(self, **kw):
         try:
@@ -267,7 +280,11 @@ class ApiSalesOrder(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/sales-order/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def delete_sales_order(self, **kw):
         try:
@@ -301,7 +318,11 @@ class ApiSalesOrder(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/sales-order/auto-no",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def auto_no_so(self, **kw):
         try:

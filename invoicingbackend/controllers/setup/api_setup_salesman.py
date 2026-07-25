@@ -5,7 +5,11 @@ from odoo.http import request
 class ApiSetupSalesman(http.Controller):
 
     @http.route(
-        "/api/setup/salesman/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/salesman/get",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def get_salesman(self, **kw):
         try:
@@ -26,7 +30,11 @@ class ApiSetupSalesman(http.Controller):
             return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/salesman/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
+        "/api/setup/salesman/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+        cors="http://localhost:5173",
     )
     def save_salesman(self, **kw):
         try:
