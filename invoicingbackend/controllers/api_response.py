@@ -4,10 +4,12 @@ from odoo.http import Response
 
 class ApiResponse:
     @staticmethod
-    def success(data=None, message="Success", status_code=200):
+    def success(data=None, message="Success", status_code=200, pagination=None):
         response_body = {"status": "success", "message": message}
         if data is not None:
             response_body["data"] = data
+        if pagination is not None:
+            response_body["pagination"] = pagination
 
         return Response(
             json.dumps(response_body),

@@ -15,7 +15,7 @@ class ApiInvoice(http.Controller):
         auth="user",
         methods=["GET", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_invoices(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -23,9 +23,20 @@ class ApiInvoice(http.Controller):
         try:
             domain = [("company_id", "=", request.env.user.company_id.id)]
             limit = int(kwargs.get("limit", 2000))
-            records = request.env["invoicingbackend.invoice"].search(
-                domain, order="tgl_invoice desc", limit=limit
-            )
+            page = kwargs.get("page")
+            
+            if page:
+                page = int(page)
+                offset = (page - 1) * limit
+                total_records = request.env["invoicingbackend.invoice"].search_count(domain)
+                records = request.env["invoicingbackend.invoice"].search(
+                    domain, order="tgl_invoice desc", limit=limit, offset=offset
+                )
+            else:
+                total_records = 0
+                records = request.env["invoicingbackend.invoice"].search(
+                    domain, order="tgl_invoice desc", limit=limit
+                )
 
             data = []
             for rec in records:
@@ -126,6 +137,13 @@ class ApiInvoice(http.Controller):
                         "lines": lines,
                     }
                 )
+            if page:
+                import math
+                return ApiResponse.success(data=data, pagination={
+                    "total": total_records,
+                    "page": page,
+                    "last_page": math.ceil(total_records / limit) if total_records > 0 else 1
+                })
             return ApiResponse.success(data=data)
         except Exception as e:
             _logger.error(f"Error fetching invoices: {str(e)}")
@@ -137,7 +155,7 @@ class ApiInvoice(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_invoice(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -323,7 +341,7 @@ class ApiInvoice(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_invoice(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -359,7 +377,7 @@ class ApiInvoice(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/invoice/auto-no", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/invoice/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def auto_no_invoice(self, **kw):
         try:
@@ -385,4 +403,4 @@ class ApiInvoice(http.Controller):
             new_no = f"INV/{year_str}/{seq:03d}"
             return {"status": "success", "data": new_no}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

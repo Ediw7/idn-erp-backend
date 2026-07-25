@@ -15,7 +15,7 @@ class ApiOutstanding(http.Controller):
         auth="user",
         methods=["GET", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_outstanding(self, **kwargs):
         if request.httprequest.method == "OPTIONS":

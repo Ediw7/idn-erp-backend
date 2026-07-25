@@ -4,7 +4,7 @@ from odoo.http import request
 
 class ApiSuratSetoranPajak(http.Controller):
 
-    @http.route("/api/ssp/get", type="json", auth="user", methods=["POST"], cors="*")
+    @http.route("/api/ssp/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173")
     def get_ssp(self, **kw):
         try:
             records = request.env["invoicingbackend.surat_setoran_pajak"].search([])
@@ -36,9 +36,9 @@ class ApiSuratSetoranPajak(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
-    @http.route("/api/ssp/create", type="json", auth="user", methods=["POST"], cors="*")
+    @http.route("/api/ssp/create", type="json", auth="user", methods=["POST"], cors="http://localhost:5173")
     def create_ssp(self, **kw):
         try:
             params = kw
@@ -77,9 +77,9 @@ class ApiSuratSetoranPajak(http.Controller):
 
             return {"status": "success", "id": res_id}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
-    @http.route("/api/ssp/delete", type="json", auth="user", methods=["POST"], cors="*")
+    @http.route("/api/ssp/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173")
     def delete_ssp(self, **kw):
         try:
             record_id = kw.get("id")
@@ -89,4 +89,4 @@ class ApiSuratSetoranPajak(http.Controller):
                 ).unlink()
             return {"status": "success"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

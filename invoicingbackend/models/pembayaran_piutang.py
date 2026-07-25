@@ -8,11 +8,11 @@ class PembayaranPiutang(models.Model):
 
     no_bukti = fields.Char(string="No. Bukti", required=True, index=True)
     tgl_pembayaran = fields.Date(
-        string="Tgl Pembayaran", required=True, default=fields.Date.context_today
+        string="Tanggal", required=True, default=fields.Date.today, index=True
     )
 
     pelanggan_id = fields.Many2one(
-        "invoicingbackend.pelanggan", string="Dibayar Oleh", required=True
+        "invoicingbackend.setup_pelanggan", string="Pelanggan", required=True, index=True
     )
 
     perkiraan_kas_id = fields.Many2one(

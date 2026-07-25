@@ -9,7 +9,7 @@ class ApiSetupFormatBukti(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_format_bukti(self, **kw):
         try:
@@ -65,14 +65,14 @@ class ApiSetupFormatBukti(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/format_bukti/save",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_format_bukti(self, **kw):
         try:
@@ -98,14 +98,14 @@ class ApiSetupFormatBukti(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/format_bukti/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_format_bukti(self, **kw):
         try:
@@ -124,4 +124,4 @@ class ApiSetupFormatBukti(http.Controller):
                     return {"status": "error", "message": "Data tidak ditemukan"}
             return {"status": "error", "message": "ID tidak valid"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

@@ -5,7 +5,7 @@ from odoo.http import request
 class ApiSetupPelanggan(http.Controller):
 
     @http.route(
-        "/api/setup/pelanggan/get", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/setup/pelanggan/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def get_pelanggan(self, **kw):
         try:
@@ -57,14 +57,14 @@ class ApiSetupPelanggan(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/pelanggan/save",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_pelanggan(self, **kw):
         try:
@@ -114,14 +114,14 @@ class ApiSetupPelanggan(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/pelanggan/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_pelanggan(self, **kw):
         try:
@@ -140,14 +140,14 @@ class ApiSetupPelanggan(http.Controller):
                     return {"status": "error", "message": "Data tidak ditemukan"}
             return {"status": "error", "message": "ID tidak valid"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/pelanggan/import_batch",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def import_batch_pelanggan(self, **kw):
         try:
@@ -193,4 +193,4 @@ class ApiSetupPelanggan(http.Controller):
                 "message": f"Berhasil mengimpor {success_count} data pelanggan",
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

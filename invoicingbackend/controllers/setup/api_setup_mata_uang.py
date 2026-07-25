@@ -5,7 +5,7 @@ from odoo.http import request
 class ApiSetupMataUang(http.Controller):
 
     @http.route(
-        "/api/setup/matauang/get", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/setup/matauang/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def get_mata_uang(self, **kw):
         try:
@@ -22,10 +22,10 @@ class ApiSetupMataUang(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/setup/matauang/save", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/setup/matauang/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def save_mata_uang(self, **kw):
         try:
@@ -54,14 +54,14 @@ class ApiSetupMataUang(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/matauang/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_mata_uang(self, **kw):
         try:
@@ -80,4 +80,4 @@ class ApiSetupMataUang(http.Controller):
                     return {"status": "error", "message": "Data tidak ditemukan"}
             return {"status": "error", "message": "ID tidak valid"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

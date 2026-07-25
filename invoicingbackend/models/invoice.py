@@ -8,11 +8,11 @@ class Invoice(models.Model):
 
     no_invoice = fields.Char(string="No. Invoice", required=True, index=True)
     tgl_invoice = fields.Date(
-        string="Tgl Invoice", required=True, default=fields.Date.context_today
+        string="Tanggal Invoice", required=True, default=fields.Date.today, index=True
     )
 
     pelanggan_id = fields.Many2one(
-        "invoicingbackend.pelanggan", string="Pelanggan", required=True
+        "invoicingbackend.pelanggan", string="Pelanggan", required=True, index=True
     )
     alamat = fields.Text(string="Alamat", related="pelanggan_id.alamat", readonly=True)
 
@@ -56,6 +56,9 @@ class Invoice(models.Model):
     # Saldo
     total_terbayar = fields.Float(
         string="Total Terbayar", compute="_compute_terbayar", store=True
+    )
+    total_nota_kredit = fields.Float(
+        string="Total Nota Kredit", compute="_compute_saldo", store=True
     )
     saldo_piutang = fields.Float(
         string="Saldo Piutang", compute="_compute_saldo", store=True
@@ -101,6 +104,11 @@ class Invoice(models.Model):
         "invoice_id",
         string="Histori Kwitansi",
     )
+    nota_kredit_ids = fields.One2many(
+        "invoicingbackend.nota_kredit",
+        "invoice_id",
+        string="Histori Nota Kredit",
+    )
 
     @api.depends(
         "line_ids.harga_jual",
@@ -142,10 +150,13 @@ class Invoice(models.Model):
 
             record.total_terbayar = total_bayar + total_kwitansi
 
-    @api.depends("total", "total_terbayar")
+    @api.depends("total", "total_terbayar", "nota_kredit_ids.nilai_nota_kredit")
     def _compute_saldo(self):
         for record in self:
-            saldo = record.total - record.total_terbayar
+            tot_nk = sum(nk.nilai_nota_kredit for nk in record.nota_kredit_ids)
+            record.total_nota_kredit = tot_nk
+            
+            saldo = record.total - record.total_terbayar - tot_nk
             # Hindari minus kecil akibat pembulatan
             record.saldo_piutang = saldo if saldo > 0.01 else 0.0
             record.is_lunas = record.saldo_piutang <= 0.01

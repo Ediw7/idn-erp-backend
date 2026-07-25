@@ -9,7 +9,7 @@ class ApiNotaReturPembelian(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_nota_retur_pembelian(self, **kw):
         try:
@@ -58,14 +58,14 @@ class ApiNotaReturPembelian(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/nota-retur-pembelian/create",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def create_nota_retur_pembelian(self, **kw):
         try:
@@ -123,14 +123,14 @@ class ApiNotaReturPembelian(http.Controller):
 
             return {"status": "success", "id": res_id}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/nota-retur-pembelian/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_nota_retur_pembelian(self, **kw):
         try:
@@ -141,14 +141,14 @@ class ApiNotaReturPembelian(http.Controller):
                 ).unlink()
             return {"status": "success"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/nota-retur-pembelian/autono",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def autono_nota_retur_pembelian(self, **kw):
         return {"status": "success", "no_nota": "RB/00X/03/2026"}

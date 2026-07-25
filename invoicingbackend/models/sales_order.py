@@ -6,7 +6,7 @@ class SalesOrder(models.Model):
     _description = "Sales Order"
     _inherit = "invoicingbackend.base_tenant"
 
-    no_so = fields.Char(string="No. Sales Order", required=True)
+    no_so = fields.Char(string="No. Sales Order", required=True, index=True)
     tgl_so = fields.Date(
         string="Tgl Sales Order", required=True, default=fields.Date.context_today
     )

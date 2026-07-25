@@ -6,7 +6,7 @@ class SuratJalan(models.Model):
     _description = "Surat Jalan"
     _inherit = "invoicingbackend.base_tenant"
 
-    no_sj = fields.Char(string="No Surat Jalan", required=True)
+    no_sj = fields.Char(string="No Surat Jalan", required=True, index=True)
     tgl_sj = fields.Date(
         string="Tanggal", required=True, default=fields.Date.context_today
     )

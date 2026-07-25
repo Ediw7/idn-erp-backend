@@ -15,7 +15,7 @@ class ApiSuratJalan(http.Controller):
         auth="user",
         methods=["GET", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_surat_jalan(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -76,7 +76,7 @@ class ApiSuratJalan(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_surat_jalan(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -182,7 +182,7 @@ class ApiSuratJalan(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_surat_jalan(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -210,7 +210,7 @@ class ApiSuratJalan(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/surat_jalan/auto-no", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/surat_jalan/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def auto_no_sj(self, **kw):
         try:
@@ -237,4 +237,4 @@ class ApiSuratJalan(http.Controller):
             new_no = f"SJ/{seq:03d}/{month_str}/{year_str}"
             return {"status": "success", "data": new_no}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

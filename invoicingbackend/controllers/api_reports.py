@@ -12,7 +12,7 @@ class ApiReports(http.Controller):
     @http.route(
         "/api/reports/generate",
         type="http",
-        auth="public",
+        auth="user",
         methods=["POST"],
         csrf=False,
     )
@@ -39,7 +39,6 @@ class ApiReports(http.Controller):
 
                 invoice_id = (
                     request.env["invoicingbackend.invoice"]
-                    .sudo()
                     .search([("no_invoice", "=", no_invoice)], limit=1)
                     .id
                 )
@@ -51,7 +50,6 @@ class ApiReports(http.Controller):
 
                 pdf_content, _ = (
                     request.env["ir.actions.report"]
-                    .sudo()
                     ._render_qweb_pdf(
                         "invoicingbackend.action_report_invoice", [invoice_id]
                     )
@@ -66,7 +64,6 @@ class ApiReports(http.Controller):
 
                 sj_id = (
                     request.env["invoicingbackend.surat_jalan"]
-                    .sudo()
                     .search([("no_sj", "=", no_sj)], limit=1)
                     .id
                 )
@@ -78,7 +75,6 @@ class ApiReports(http.Controller):
 
                 pdf_content, _ = (
                     request.env["ir.actions.report"]
-                    .sudo()
                     ._render_qweb_pdf(
                         "invoicingbackend.action_report_surat_jalan", [sj_id]
                     )
@@ -93,7 +89,6 @@ class ApiReports(http.Controller):
 
                 so_id = (
                     request.env["invoicingbackend.sales_order"]
-                    .sudo()
                     .search([("no_so", "=", no_so)], limit=1)
                     .id
                 )
@@ -105,7 +100,6 @@ class ApiReports(http.Controller):
 
                 pdf_content, _ = (
                     request.env["ir.actions.report"]
-                    .sudo()
                     ._render_qweb_pdf(
                         "invoicingbackend.action_report_sales_order", [so_id]
                     )
@@ -132,14 +126,14 @@ class ApiReports(http.Controller):
             headers = [
                 ("Content-Type", "application/pdf"),
                 ("Content-Disposition", f'inline; filename="{report_type}.pdf"'),
-                ("Access-Control-Allow-Origin", "*"),
+                ("Access-Control-Allow-Origin", "http://localhost:5173"),
             ]
 
             return request.make_response(pdf_content, headers=headers)
         except Exception as e:
             _logger.error("Error generating report API: %s", str(e))
             return request.make_response(
-                json.dumps({"status": "error", "message": str(e)}),
+                json.dumps({"status": "error", "message": "Terjadi kesalahan internal peladen saat men-generate laporan."}),
                 status=500,
                 headers=[("Content-Type", "application/json")],
             )
@@ -154,7 +148,7 @@ class ApiReports(http.Controller):
     )
     def generate_report_options(self, **kw):
         headers = [
-            ("Access-Control-Allow-Origin", "*"),
+            ("Access-Control-Allow-Origin", "http://localhost:5173"),
             ("Access-Control-Allow-Methods", "POST, OPTIONS"),
             ("Access-Control-Allow-Headers", "Content-Type, Authorization"),
         ]

@@ -11,7 +11,7 @@ class ApiSaldoAwalPiutang(http.Controller):
         auth="user",
         methods=["GET", "POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_saldo_awal_piutang(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -55,7 +55,7 @@ class ApiSaldoAwalPiutang(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def create_saldo_awal_piutang(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -99,7 +99,7 @@ class ApiSaldoAwalPiutang(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def update_saldo_awal_piutang(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -146,7 +146,7 @@ class ApiSaldoAwalPiutang(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_saldo_awal_piutang(self, **kw):
         if request.httprequest.method == "OPTIONS":

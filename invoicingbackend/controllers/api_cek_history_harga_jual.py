@@ -14,7 +14,7 @@ class ApiCekHistoryHargaJual(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_history(self, **kwargs):
         try:
@@ -108,4 +108,4 @@ class ApiCekHistoryHargaJual(http.Controller):
             return {"status": "success", "data": data}
         except Exception as e:
             _logger.error(f"Error fetching history: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

@@ -6,7 +6,7 @@ from datetime import datetime
 class ApiSalesOrder(http.Controller):
 
     @http.route(
-        "/api/sales-order/get", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/sales-order/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def get_sales_order(self, **kw):
         try:
@@ -28,9 +28,20 @@ class ApiSalesOrder(http.Controller):
                 domain.append(("tgl_so", "<=", f"{yr}-{mn:02d}-{last_day:02d}"))
 
             limit = int(params.get("limit", 2000))
-            records = request.env["invoicingbackend.sales_order"].search(
-                domain, order="tgl_so desc, no_so desc", limit=limit
-            )
+            page = params.get("page")
+            
+            if page:
+                page = int(page)
+                offset = (page - 1) * limit
+                total_records = request.env["invoicingbackend.sales_order"].search_count(domain)
+                records = request.env["invoicingbackend.sales_order"].search(
+                    domain, order="tgl_so desc, no_so desc", limit=limit, offset=offset
+                )
+            else:
+                total_records = 0
+                records = request.env["invoicingbackend.sales_order"].search(
+                    domain, order="tgl_so desc, no_so desc", limit=limit
+                )
             data = []
             for rec in records:
                 lines = []
@@ -147,12 +158,23 @@ class ApiSalesOrder(http.Controller):
                         "lines": lines,
                     }
                 )
+            if page:
+                import math
+                return {
+                    "status": "success",
+                    "data": data,
+                    "pagination": {
+                        "total": total_records,
+                        "page": page,
+                        "last_page": math.ceil(total_records / limit) if total_records > 0 else 1
+                    }
+                }
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/save", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/sales-order/save", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def save_sales_order(self, **kw):
         try:
@@ -242,10 +264,10 @@ class ApiSalesOrder(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/delete", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/sales-order/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def delete_sales_order(self, **kw):
         try:
@@ -276,10 +298,10 @@ class ApiSalesOrder(http.Controller):
                 return {"status": "success", "message": "Sales Order berhasil dihapus"}
             return {"status": "error", "message": "Data tidak ditemukan"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/sales-order/auto-no", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/sales-order/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def auto_no_so(self, **kw):
         try:
@@ -307,4 +329,4 @@ class ApiSalesOrder(http.Controller):
             new_no = f"SO/{seq:03d}/{month_str}/{year_str}"
             return {"status": "success", "no_so": new_no}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

@@ -5,7 +5,7 @@ from odoo.http import request
 class ApiSptMasa1111(http.Controller):
 
     @http.route(
-        "/api/spt-masa/get", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/spt-masa/get", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def get_spt_masa(self, **kw):
         try:
@@ -57,10 +57,10 @@ class ApiSptMasa1111(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/spt-masa/create", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/spt-masa/create", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def create_spt_masa(self, **kw):
         try:
@@ -116,10 +116,10 @@ class ApiSptMasa1111(http.Controller):
 
             return {"status": "success", "id": res_id}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
-        "/api/spt-masa/delete", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/spt-masa/delete", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def delete_spt_masa(self, **kw):
         try:
@@ -128,4 +128,4 @@ class ApiSptMasa1111(http.Controller):
                 request.env["invoicingbackend.spt_masa_1111"].browse(record_id).unlink()
             return {"status": "success"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

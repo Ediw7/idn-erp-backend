@@ -10,7 +10,7 @@ class ApiSaldoAwalInventory(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_saldo_awal(self, **kw):
         try:
@@ -46,14 +46,14 @@ class ApiSaldoAwalInventory(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/inventory/saldo-awal/save",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_saldo_awal(self, **kw):
         try:
@@ -110,14 +110,14 @@ class ApiSaldoAwalInventory(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/inventory/saldo-awal/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_saldo_awal(self, **kw):
         try:
@@ -131,4 +131,4 @@ class ApiSaldoAwalInventory(http.Controller):
                 return {"status": "success", "message": "Data berhasil dihapus"}
             return {"status": "error", "message": "ID tidak valid"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

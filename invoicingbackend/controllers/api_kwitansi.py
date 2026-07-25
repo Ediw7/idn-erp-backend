@@ -15,7 +15,7 @@ class ApiKwitansi(http.Controller):
         auth="user",
         methods=["GET", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_kwitansi(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -69,7 +69,7 @@ class ApiKwitansi(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_kwitansi(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -134,7 +134,7 @@ class ApiKwitansi(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_kwitansi(self, **kw):
         if request.httprequest.method == "OPTIONS":
@@ -156,7 +156,7 @@ class ApiKwitansi(http.Controller):
             return ApiResponse.error(message=str(e), status_code=500)
 
     @http.route(
-        "/api/kwitansi/auto-no", type="json", auth="user", methods=["POST"], cors="*"
+        "/api/kwitansi/auto-no", type="json", auth="user", methods=["POST"], cors="http://localhost:5173"
     )
     def auto_no_kwitansi(self, **kw):
         try:
@@ -183,4 +183,4 @@ class ApiKwitansi(http.Controller):
             new_no = f"KT/{seq:03d}/{month_str}/{year_str}"
             return {"status": "success", "data": new_no}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

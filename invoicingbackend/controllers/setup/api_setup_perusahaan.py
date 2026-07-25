@@ -12,7 +12,7 @@ class ApiSetupPerusahaan(http.Controller):
         auth="user",
         methods=["GET", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_perusahaan(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -63,7 +63,7 @@ class ApiSetupPerusahaan(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_perusahaan(self, **kw):
         if request.httprequest.method == "OPTIONS":

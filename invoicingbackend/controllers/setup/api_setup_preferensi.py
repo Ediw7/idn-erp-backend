@@ -8,21 +8,21 @@ class ApiSetupPreferensi(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_preferensi(self, **kw):
         try:
             pref = request.env["invoicingbackend.preferensi"].get_preferences()
             return {"status": "success", "data": pref}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/preferensi/save",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_preferensi(self, **kw):
         data = kw
@@ -82,4 +82,4 @@ class ApiSetupPreferensi(http.Controller):
                 "message": "Setup preferensi berhasil disimpan!",
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

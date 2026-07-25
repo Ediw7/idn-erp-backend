@@ -9,7 +9,7 @@ class ApiSetupJenisSetoran(http.Controller):
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_jenis_setoran(self, **kw):
         try:
@@ -36,14 +36,14 @@ class ApiSetupJenisSetoran(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/jenis_setoran/save",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def save_jenis_setoran(self, **kw):
         try:
@@ -75,14 +75,14 @@ class ApiSetupJenisSetoran(http.Controller):
                 "id": record.id,
             }
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
 
     @http.route(
         "/api/setup/jenis_setoran/delete",
         type="json",
         auth="user",
         methods=["POST"],
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_jenis_setoran(self, **kw):
         try:
@@ -101,4 +101,4 @@ class ApiSetupJenisSetoran(http.Controller):
                     return {"status": "error", "message": "Data tidak ditemukan"}
             return {"status": "error", "message": "ID tidak valid"}
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}

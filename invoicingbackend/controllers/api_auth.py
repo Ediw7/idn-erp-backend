@@ -11,7 +11,7 @@ class AuthController(http.Controller):
         auth="public",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def login(self, **kwargs):
         # Handle CORS preflight OPTIONS request gracefully if needed
@@ -72,7 +72,7 @@ class AuthController(http.Controller):
             return response
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -83,7 +83,7 @@ class AuthController(http.Controller):
         auth="public",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def register(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -156,7 +156,7 @@ class AuthController(http.Controller):
             )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -164,14 +164,26 @@ class AuthController(http.Controller):
     @http.route(
         "/api/auth/users",
         type="http",
-        auth="public",
-        methods=["GET", "OPTIONS"],
+        auth="user",
+        methods=["GET"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def get_users(self, **kwargs):
-        if request.httprequest.method == "OPTIONS":
-            return Response(status=200)
+        pass
+
+    @http.route(
+        "/api/auth/users",
+        type="http",
+        auth="public",
+        methods=["OPTIONS"],
+        csrf=False,
+        cors="http://localhost:5173",
+    )
+    def get_users_options(self, **kwargs):
+        return Response(status=200)
+
+    def get_users(self, **kwargs):
 
         if not request.session.uid:
             return Response(
@@ -212,7 +224,7 @@ class AuthController(http.Controller):
             )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -223,7 +235,7 @@ class AuthController(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def toggle_user(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -272,7 +284,7 @@ class AuthController(http.Controller):
                 )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -283,7 +295,7 @@ class AuthController(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def create_user(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -403,7 +415,7 @@ class AuthController(http.Controller):
             )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -414,7 +426,7 @@ class AuthController(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def update_user(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -465,7 +477,7 @@ class AuthController(http.Controller):
             )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -476,7 +488,7 @@ class AuthController(http.Controller):
         auth="user",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def delete_user(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
@@ -524,7 +536,7 @@ class AuthController(http.Controller):
                 )
         except Exception as e:
             return Response(
-                json.dumps({"error": str(e)}),
+                json.dumps({"error": "Terjadi kesalahan internal peladen."}),
                 status=500,
                 content_type="application/json",
             )
@@ -535,7 +547,7 @@ class AuthController(http.Controller):
         auth="public",
         methods=["POST", "OPTIONS"],
         csrf=False,
-        cors="*",
+        cors="http://localhost:5173",
     )
     def logout(self, **kwargs):
         if request.httprequest.method == "OPTIONS":
