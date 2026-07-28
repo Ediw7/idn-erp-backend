@@ -54,7 +54,9 @@ class FakturPajakLine(models.Model):
         ondelete="cascade",
     )
     item_id = fields.Many2one("invoicingbackend.item", string="Barang")
-
+    satuan = fields.Char(string="Satuan")
     kuantum = fields.Float(string="Kuantum", default=1.0)
     harga_satuan = fields.Float(string="Harga Satuan")
+    disc_persen = fields.Float(string="Diskon (%)")
+    disc_harga = fields.Float(string="Diskon (Rp)")
     harga_jual = fields.Float(string="Harga Jual (DPP)")

@@ -73,6 +73,10 @@ class ApiFakturPajak(http.Controller):
                 domain.append(("tgl_fp", ">=", start_date))
                 domain.append(("tgl_fp", "<=", end_date))
 
+            no_invoice = kwargs.get("no_invoice")
+            if no_invoice:
+                domain.append(("no_invoice", "=", no_invoice))
+
             search = kwargs.get("search")
             if search:
                 domain.append("|")
@@ -96,9 +100,11 @@ class ApiFakturPajak(http.Controller):
                             "item_id": line.item_id.id if line.item_id else None,
                             "kode_barang": line.item_id.kode if line.item_id else "",
                             "nama_barang": line.item_id.nama if line.item_id else "",
-                            "satuan": line.item_id.satuan if line.item_id else "Pcs",
+                            "satuan": line.satuan or (line.item_id.satuan if line.item_id else "Pcs"),
                             "kuantum": line.kuantum,
                             "harga_satuan": line.harga_satuan,
+                            "disc_persen": line.disc_persen,
+                            "disc_harga": line.disc_harga,
                             "harga_jual": line.harga_jual,
                         }
                     )
@@ -180,9 +186,11 @@ class ApiFakturPajak(http.Controller):
                         "item_id": line.item_id.id if line.item_id else None,
                         "kode_barang": line.item_id.kode if line.item_id else "",
                         "nama_barang": line.item_id.nama if line.item_id else "",
-                        "satuan": line.item_id.satuan if line.item_id else "Pcs",
+                        "satuan": line.satuan or (line.item_id.satuan if line.item_id else "Pcs"),
                         "kuantum": line.kuantum,
                         "harga_satuan": line.harga_satuan,
+                        "disc_persen": line.disc_persen,
+                        "disc_harga": line.disc_harga,
                         "harga_jual": line.harga_jual,
                     }
                 )
@@ -272,8 +280,11 @@ class ApiFakturPajak(http.Controller):
                     {
                         "faktur_id": rec.id,
                         "item_id": line_data.get("item_id"),
+                        "satuan": line_data.get("satuan", ""),
                         "kuantum": line_data.get("kuantum", 0),
                         "harga_satuan": line_data.get("harga_satuan", 0),
+                        "disc_persen": line_data.get("disc_persen", 0),
+                        "disc_harga": line_data.get("disc_harga", 0),
                         "harga_jual": line_data.get("harga_jual", 0),
                     }
                 )
@@ -337,8 +348,11 @@ class ApiFakturPajak(http.Controller):
                 line_vals = {
                     "faktur_id": rec.id,
                     "item_id": line_data.get("item_id"),
+                    "satuan": line_data.get("satuan", ""),
                     "kuantum": line_data.get("kuantum", 0),
                     "harga_satuan": line_data.get("harga_satuan", 0),
+                    "disc_persen": line_data.get("disc_persen", 0),
+                    "disc_harga": line_data.get("disc_harga", 0),
                     "harga_jual": line_data.get("harga_jual", 0),
                 }
 
@@ -385,3 +399,98 @@ class ApiFakturPajak(http.Controller):
         except Exception as e:
             _logger.error("Error delete_faktur_pajak: %s", str(e))
             return error_response(str(e))
+
+    @http.route(
+        "/api/faktur_pajak/auto-no",
+        type="http",
+        auth="user",
+        methods=["POST", "OPTIONS"],
+        csrf=False,
+        cors="http://localhost:5173",
+    )
+    def auto_no_fp(self, **kwargs):
+        """Generate next No. Faktur Pajak based on selected Penomoran (NSFP range)."""
+        if request.httprequest.method == "OPTIONS":
+            return http.Response(status=200)
+
+        try:
+            payload = json.loads(request.httprequest.data.decode("utf-8"))
+            penomoran = payload.get("penomoran", "")
+            kode_transaksi = payload.get("kode_transaksi", "01")
+            kode_status = payload.get("kode_status", "0")
+
+            if not penomoran:
+                return error_response("Penomoran wajib dipilih")
+
+            # Parse range: "000-20.00000001 - 000-20.00099999"
+            parts = penomoran.split(" - ")
+            if len(parts) != 2:
+                return error_response("Format penomoran tidak valid")
+
+            no_seri_awal = parts[0].strip()
+            no_seri_akhir = parts[1].strip()
+
+            # Extract numeric part from seri (after last dot)
+            # e.g. "000-20.00000001" -> prefix="000-20.", numeric=1
+            prefix = ""
+            num_start = 0
+            num_end = 0
+
+            dot_idx = no_seri_awal.rfind(".")
+            if dot_idx >= 0:
+                prefix = no_seri_awal[: dot_idx + 1]
+                num_start = int(no_seri_awal[dot_idx + 1 :])
+                num_end = int(no_seri_akhir[dot_idx + 1 :])
+            else:
+                # Try extracting trailing digits
+                import re
+                m = re.match(r"^(.*?)(\d+)$", no_seri_awal)
+                if m:
+                    prefix = m.group(1)
+                    num_start = int(m.group(2))
+                    m2 = re.match(r"^(.*?)(\d+)$", no_seri_akhir)
+                    num_end = int(m2.group(2)) if m2 else num_start + 99999
+                else:
+                    return error_response("Format nomor seri tidak valid")
+
+            num_len = len(no_seri_awal) - len(prefix)
+
+            # Find the latest FP using this penomoran
+            existing = request.env["invoicingbackend.transaksi_faktur_pajak"].search(
+                [("penomoran", "=", penomoran)],
+                order="no_fp desc",
+                limit=1,
+            )
+
+            if existing:
+                last_no_fp = existing[0].no_fp or ""
+                # Extract the numeric part from the last used no_fp
+                last_dot_idx = last_no_fp.rfind(".")
+                if last_dot_idx >= 0:
+                    try:
+                        last_num = int(last_no_fp[last_dot_idx + 1 :])
+                        next_num = last_num + 1
+                    except ValueError:
+                        next_num = num_start
+                else:
+                    import re
+                    m = re.match(r"^(.*?)(\d+)$", last_no_fp)
+                    if m:
+                        next_num = int(m.group(2)) + 1
+                    else:
+                        next_num = num_start
+            else:
+                next_num = num_start
+
+            if next_num > num_end:
+                return error_response(
+                    f"Range penomoran sudah habis! Maksimal: {prefix}{str(num_end).zfill(num_len)}"
+                )
+
+            new_no_fp = f"{kode_transaksi}{kode_status}.{prefix}{str(next_num).zfill(num_len)}"
+
+            return success_response("Nomor FP berhasil digenerate", {"no_fp": new_no_fp})
+        except Exception as e:
+            _logger.error("Error auto_no_fp: %s", str(e))
+            return error_response(str(e))
+

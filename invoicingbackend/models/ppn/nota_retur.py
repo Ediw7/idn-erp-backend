@@ -9,7 +9,7 @@ class NotaRetur(models.Model):
     no_nota = fields.Char(string="No Nota Retur")
     tgl_nota = fields.Date(string="Tgl Nota Retur")
     pelanggan_id = fields.Many2one(
-        "invoicingbackend.setup_pelanggan", string="Pelanggan"
+        "invoicingbackend.pelanggan", string="Pelanggan"
     )
     alamat_pembeli = fields.Text(string="Alamat Pembeli")
     jenis_transaksi = fields.Char(string="Jenis Transaksi")
@@ -19,7 +19,7 @@ class NotaRetur(models.Model):
     tgl_fp = fields.Date(string="Tgl FP")
     atas_no_invoice = fields.Char(string="Atas No Invoice")
     mata_uang_id = fields.Many2one(
-        "invoicingbackend.setup_mata_uang", string="Mata Uang"
+        "invoicingbackend.mata_uang", string="Mata Uang"
     )
     tarif_ppn = fields.Float(string="Tarif PPN")
     kurs_pajak = fields.Float(string="Kurs Pajak")
@@ -40,7 +40,7 @@ class NotaReturLine(models.Model):
     nota_id = fields.Many2one(
         "invoicingbackend.nota_retur", string="Nota Retur", ondelete="cascade"
     )
-    item_id = fields.Many2one("invoicingbackend.setup_item", string="Item")
+    item_id = fields.Many2one("invoicingbackend.item", string="Item")
     nama_barang = fields.Char(string="Nama Barang")
     satuan = fields.Char(string="Satuan")
     kuantum = fields.Float(string="Kuantum")
