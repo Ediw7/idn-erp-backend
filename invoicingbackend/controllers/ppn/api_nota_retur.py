@@ -152,6 +152,7 @@ class ApiNotaRetur(http.Controller):
     )
     def autono_nota_retur(self, **kw):
         import datetime
+
         now = datetime.datetime.now()
         no = f"RJ/{now.strftime('%m%d%H%M%S')}/{now.strftime('%m/%Y')}"
         return {"status": "success", "no_nota": no}

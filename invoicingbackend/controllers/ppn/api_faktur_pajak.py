@@ -100,7 +100,8 @@ class ApiFakturPajak(http.Controller):
                             "item_id": line.item_id.id if line.item_id else None,
                             "kode_barang": line.item_id.kode if line.item_id else "",
                             "nama_barang": line.item_id.nama if line.item_id else "",
-                            "satuan": line.satuan or (line.item_id.satuan if line.item_id else "Pcs"),
+                            "satuan": line.satuan
+                            or (line.item_id.satuan if line.item_id else "Pcs"),
                             "kuantum": line.kuantum,
                             "harga_satuan": line.harga_satuan,
                             "disc_persen": line.disc_persen,
@@ -186,7 +187,8 @@ class ApiFakturPajak(http.Controller):
                         "item_id": line.item_id.id if line.item_id else None,
                         "kode_barang": line.item_id.kode if line.item_id else "",
                         "nama_barang": line.item_id.nama if line.item_id else "",
-                        "satuan": line.satuan or (line.item_id.satuan if line.item_id else "Pcs"),
+                        "satuan": line.satuan
+                        or (line.item_id.satuan if line.item_id else "Pcs"),
                         "kuantum": line.kuantum,
                         "harga_satuan": line.harga_satuan,
                         "disc_persen": line.disc_persen,
@@ -444,6 +446,7 @@ class ApiFakturPajak(http.Controller):
             else:
                 # Try extracting trailing digits
                 import re
+
                 m = re.match(r"^(.*?)(\d+)$", no_seri_awal)
                 if m:
                     prefix = m.group(1)
@@ -474,6 +477,7 @@ class ApiFakturPajak(http.Controller):
                         next_num = num_start
                 else:
                     import re
+
                     m = re.match(r"^(.*?)(\d+)$", last_no_fp)
                     if m:
                         next_num = int(m.group(2)) + 1
@@ -487,10 +491,13 @@ class ApiFakturPajak(http.Controller):
                     f"Range penomoran sudah habis! Maksimal: {prefix}{str(num_end).zfill(num_len)}"
                 )
 
-            new_no_fp = f"{kode_transaksi}{kode_status}.{prefix}{str(next_num).zfill(num_len)}"
+            new_no_fp = (
+                f"{kode_transaksi}{kode_status}.{prefix}{str(next_num).zfill(num_len)}"
+            )
 
-            return success_response("Nomor FP berhasil digenerate", {"no_fp": new_no_fp})
+            return success_response(
+                "Nomor FP berhasil digenerate", {"no_fp": new_no_fp}
+            )
         except Exception as e:
             _logger.error("Error auto_no_fp: %s", str(e))
             return error_response(str(e))
-
