@@ -76,13 +76,26 @@ class ApiNotaRetur(http.Controller):
             lines_data = []
 
             if not params.get("lines") or len(params["lines"]) == 0:
-                return {"status": "error", "message": "Nota Retur wajib memiliki minimal 1 barang (lines)."}
+                return {
+                    "status": "error",
+                    "message": "Nota Retur wajib memiliki minimal 1 barang (lines).",
+                }
 
-            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in params["lines"]):
-                return {"status": "error", "message": "Kuantitas dan Harga Satuan barang tidak boleh minus."}
+            if any(
+                float(line.get("kuantum", 0)) < 0
+                or float(line.get("harga_satuan", 0)) < 0
+                for line in params["lines"]
+            ):
+                return {
+                    "status": "error",
+                    "message": "Kuantitas dan Harga Satuan barang tidak boleh minus.",
+                }
 
             if not params.get("no_nota"):
-                return {"status": "error", "message": "Nomor Nota Retur (no_nota) wajib diisi."}
+                return {
+                    "status": "error",
+                    "message": "Nomor Nota Retur (no_nota) wajib diisi.",
+                }
 
             if "lines" in params:
                 for line in params["lines"]:

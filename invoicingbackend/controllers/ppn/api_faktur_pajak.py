@@ -251,12 +251,23 @@ class ApiFakturPajak(http.Controller):
             lines_data = payload.get("lines", [])
 
             if not lines_data or len(lines_data) == 0:
-                return error_response("Faktur Pajak wajib memiliki minimal 1 barang (lines).")
+                return error_response(
+                    "Faktur Pajak wajib memiliki minimal 1 barang (lines)."
+                )
 
-            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in lines_data):
-                return error_response("Kuantitas dan Harga Satuan barang tidak boleh minus.")
-            
-            if float(payload.get("dpp_rp", 0)) < 0 or float(payload.get("ppn_rp", 0)) < 0:
+            if any(
+                float(line.get("kuantum", 0)) < 0
+                or float(line.get("harga_satuan", 0)) < 0
+                for line in lines_data
+            ):
+                return error_response(
+                    "Kuantitas dan Harga Satuan barang tidak boleh minus."
+                )
+
+            if (
+                float(payload.get("dpp_rp", 0)) < 0
+                or float(payload.get("ppn_rp", 0)) < 0
+            ):
                 return error_response("DPP dan PPN tidak boleh minus.")
 
             if not payload.get("no_fp"):
@@ -329,12 +340,23 @@ class ApiFakturPajak(http.Controller):
             lines_data = payload.get("lines", [])
 
             if not lines_data or len(lines_data) == 0:
-                return error_response("Faktur Pajak wajib memiliki minimal 1 barang (lines).")
+                return error_response(
+                    "Faktur Pajak wajib memiliki minimal 1 barang (lines)."
+                )
 
-            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in lines_data):
-                return error_response("Kuantitas dan Harga Satuan barang tidak boleh minus.")
-            
-            if float(payload.get("dpp_rp", 0)) < 0 or float(payload.get("ppn_rp", 0)) < 0:
+            if any(
+                float(line.get("kuantum", 0)) < 0
+                or float(line.get("harga_satuan", 0)) < 0
+                for line in lines_data
+            ):
+                return error_response(
+                    "Kuantitas dan Harga Satuan barang tidak boleh minus."
+                )
+
+            if (
+                float(payload.get("dpp_rp", 0)) < 0
+                or float(payload.get("ppn_rp", 0)) < 0
+            ):
                 return error_response("DPP dan PPN tidak boleh minus.")
 
             if not payload.get("no_fp"):

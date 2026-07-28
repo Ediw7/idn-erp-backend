@@ -56,10 +56,18 @@ class ApiSuratSetoranPajak(http.Controller):
             params = kw
 
             if float(params.get("jumlah", 0)) < 0:
-                return {"status": "error", "message": "Jumlah setoran tidak boleh minus."}
+                return {
+                    "status": "error",
+                    "message": "Jumlah setoran tidak boleh minus.",
+                }
 
-            if not params.get("kode_jenis_pajak") or not params.get("kode_jenis_setoran"):
-                return {"status": "error", "message": "Kode Jenis Pajak dan Jenis Setoran wajib diisi."}
+            if not params.get("kode_jenis_pajak") or not params.get(
+                "kode_jenis_setoran"
+            ):
+                return {
+                    "status": "error",
+                    "message": "Kode Jenis Pajak dan Jenis Setoran wajib diisi.",
+                }
 
             val = {
                 "kpp": params.get("kpp"),
