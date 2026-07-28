@@ -58,7 +58,7 @@ class ApiNotaReturPembelian(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
 
     @http.route(
         "/api/nota-retur-pembelian/create",
@@ -71,6 +71,16 @@ class ApiNotaReturPembelian(http.Controller):
         try:
             params = kw
             lines_data = []
+
+            if not params.get("lines") or len(params["lines"]) == 0:
+                return {"status": "error", "message": "Nota Retur Pembelian wajib memiliki minimal 1 barang (lines)."}
+
+            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in params["lines"]):
+                return {"status": "error", "message": "Kuantitas dan Harga Satuan barang tidak boleh minus."}
+
+            if not params.get("no_nota"):
+                return {"status": "error", "message": "Nomor Nota Retur (no_nota) wajib diisi."}
+
             if "lines" in params:
                 for line in params["lines"]:
                     lines_data.append(
@@ -123,7 +133,7 @@ class ApiNotaReturPembelian(http.Controller):
 
             return {"status": "success", "id": res_id}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
 
     @http.route(
         "/api/nota-retur-pembelian/delete",
@@ -141,7 +151,7 @@ class ApiNotaReturPembelian(http.Controller):
                 ).unlink()
             return {"status": "success"}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
 
     @http.route(
         "/api/nota-retur-pembelian/autono",

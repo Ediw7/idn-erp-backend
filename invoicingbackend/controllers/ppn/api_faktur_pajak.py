@@ -248,6 +248,19 @@ class ApiFakturPajak(http.Controller):
 
         try:
             payload = json.loads(request.httprequest.data.decode("utf-8"))
+            lines_data = payload.get("lines", [])
+
+            if not lines_data or len(lines_data) == 0:
+                return error_response("Faktur Pajak wajib memiliki minimal 1 barang (lines).")
+
+            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in lines_data):
+                return error_response("Kuantitas dan Harga Satuan barang tidak boleh minus.")
+            
+            if float(payload.get("dpp_rp", 0)) < 0 or float(payload.get("ppn_rp", 0)) < 0:
+                return error_response("DPP dan PPN tidak boleh minus.")
+
+            if not payload.get("no_fp"):
+                return error_response("Nomor Faktur Pajak (no_fp) wajib diisi.")
 
             vals = {
                 "penomoran": payload.get("penomoran"),
@@ -276,7 +289,6 @@ class ApiFakturPajak(http.Controller):
 
             rec = request.env["invoicingbackend.transaksi_faktur_pajak"].create(vals)
 
-            lines_data = payload.get("lines", [])
             for line_data in lines_data:
                 request.env["invoicingbackend.transaksi_faktur_pajak_line"].create(
                     {
@@ -314,6 +326,19 @@ class ApiFakturPajak(http.Controller):
                 return error_response("Data tidak ditemukan", status=404)
 
             payload = json.loads(request.httprequest.data.decode("utf-8"))
+            lines_data = payload.get("lines", [])
+
+            if not lines_data or len(lines_data) == 0:
+                return error_response("Faktur Pajak wajib memiliki minimal 1 barang (lines).")
+
+            if any(float(line.get("kuantum", 0)) < 0 or float(line.get("harga_satuan", 0)) < 0 for line in lines_data):
+                return error_response("Kuantitas dan Harga Satuan barang tidak boleh minus.")
+            
+            if float(payload.get("dpp_rp", 0)) < 0 or float(payload.get("ppn_rp", 0)) < 0:
+                return error_response("DPP dan PPN tidak boleh minus.")
+
+            if not payload.get("no_fp"):
+                return error_response("Nomor Faktur Pajak (no_fp) wajib diisi.")
 
             vals = {
                 "penomoran": payload.get("penomoran"),
@@ -342,7 +367,6 @@ class ApiFakturPajak(http.Controller):
 
             rec.write(vals)
 
-            lines_data = payload.get("lines", [])
             existing_line_ids = rec.line_ids.ids
             new_line_ids = []
 

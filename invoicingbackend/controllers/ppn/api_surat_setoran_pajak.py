@@ -42,7 +42,7 @@ class ApiSuratSetoranPajak(http.Controller):
                 )
             return {"status": "success", "data": data}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
 
     @http.route(
         "/api/ssp/create",
@@ -54,6 +54,13 @@ class ApiSuratSetoranPajak(http.Controller):
     def create_ssp(self, **kw):
         try:
             params = kw
+
+            if float(params.get("jumlah", 0)) < 0:
+                return {"status": "error", "message": "Jumlah setoran tidak boleh minus."}
+
+            if not params.get("kode_jenis_pajak") or not params.get("kode_jenis_setoran"):
+                return {"status": "error", "message": "Kode Jenis Pajak dan Jenis Setoran wajib diisi."}
+
             val = {
                 "kpp": params.get("kpp"),
                 "nama_wp": params.get("nama_wp"),
@@ -89,7 +96,7 @@ class ApiSuratSetoranPajak(http.Controller):
 
             return {"status": "success", "id": res_id}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
 
     @http.route(
         "/api/ssp/delete",
@@ -107,4 +114,4 @@ class ApiSuratSetoranPajak(http.Controller):
                 ).unlink()
             return {"status": "success"}
         except Exception as e:
-            return {"status": "error", "message": "Terjadi kesalahan internal peladen."}
+            return {"status": "error", "message": str(e)}
