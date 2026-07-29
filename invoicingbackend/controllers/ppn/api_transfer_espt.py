@@ -31,7 +31,7 @@ class ApiTransferESpt(http.Controller):
                 ("tgl_fp", ">=", f"{tahun}-{masa}-01"),
                 ("tgl_fp", "<=", f"{tahun}-{masa}-31"),
             ]
-        
+
         fakturs = request.env["invoicingbackend.transaksi_faktur_pajak"].search(domain)
 
         if jenis_lampiran == "1111A":
@@ -64,7 +64,7 @@ class ApiTransferESpt(http.Controller):
                 nama = fp.pembeli_id.nama or fp.pembeli_id.nama_wp or ""
                 alamat = fp.pembeli_id.alamat_wp or fp.pembeli_id.alamat or ""
                 tgl = fp.tgl_fp.strftime("%Y-%m-%d") if fp.tgl_fp else ""
-                
+
                 writer.writerow(
                     [
                         fp.jenis_transaksi or "01",
@@ -138,24 +138,24 @@ class ApiTransferESpt(http.Controller):
         for p in pelanggans:
             # Only export those with valid NPWP for e-SPT
             if not p.npwp or p.npwp == "00.000.000.0-000.000":
-                pass # Can still export, but usually we export all
-                
+                pass  # Can still export, but usually we export all
+
             alamat = p.alamat_wp or p.alamat or ""
-            
+
             writer.writerow(
                 [
                     p.npwp or "00.000.000.0-000.000",
                     p.nama_wp or p.nama or "",
                     alamat,
-                    "", # BLOK
-                    "", # NO
-                    "", # RT
-                    "", # RW
-                    "", # KECAMATAN
-                    "", # KELURAHAN
-                    "", # KABUPATEN
-                    "", # PROPINSI
-                    "", # KODE_POS
+                    "",  # BLOK
+                    "",  # NO
+                    "",  # RT
+                    "",  # RW
+                    "",  # KECAMATAN
+                    "",  # KELURAHAN
+                    "",  # KABUPATEN
+                    "",  # PROPINSI
+                    "",  # KODE_POS
                     p.telepon or "",
                 ]
             )

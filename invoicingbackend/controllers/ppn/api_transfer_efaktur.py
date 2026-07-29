@@ -56,13 +56,17 @@ class ApiTransferEFaktur(http.Controller):
             # Search real Faktur Pajak
             domain = []
             if tahun and bulan:
-                domain.extend([
-                    ("tgl_fp", ">=", f"{tahun}-{bulan}-01"),
-                    ("tgl_fp", "<=", f"{tahun}-{bulan}-31"),
-                ])
-            
-            fakturs = request.env["invoicingbackend.transaksi_faktur_pajak"].search(domain)
-            
+                domain.extend(
+                    [
+                        ("tgl_fp", ">=", f"{tahun}-{bulan}-01"),
+                        ("tgl_fp", "<=", f"{tahun}-{bulan}-31"),
+                    ]
+                )
+
+            fakturs = request.env["invoicingbackend.transaksi_faktur_pajak"].search(
+                domain
+            )
+
             for fp in fakturs:
                 # Basic string filtering for fp_awal and fp_akhir if provided
                 if fp_awal and fp_awal > (fp.no_fp or ""):
@@ -93,10 +97,10 @@ class ApiTransferEFaktur(http.Controller):
                         int(fp.ppn_rp or 0),
                         0,  # PPNBM
                         fp.ket_tambahan or "",
-                        "0", # FG UANG MUKA
+                        "0",  # FG UANG MUKA
                         int(fp.uang_muka or 0),
-                        0, # UANG MUKA PPN
-                        0, # UANG MUKA PPNBM
+                        0,  # UANG MUKA PPN
+                        0,  # UANG MUKA PPNBM
                         fp.no_invoice or "",
                     ]
                 )
@@ -138,18 +142,20 @@ class ApiTransferEFaktur(http.Controller):
             # Search real Nota Retur
             domain = []
             if tahun and bulan:
-                domain.extend([
-                    ("tgl_nota", ">=", f"{tahun}-{bulan}-01"),
-                    ("tgl_nota", "<=", f"{tahun}-{bulan}-31"),
-                ])
-            
+                domain.extend(
+                    [
+                        ("tgl_nota", ">=", f"{tahun}-{bulan}-01"),
+                        ("tgl_nota", "<=", f"{tahun}-{bulan}-31"),
+                    ]
+                )
+
             returs = request.env["invoicingbackend.nota_retur"].search(domain)
 
             for r in returs:
                 npwp = r.pelanggan_id.npwp if r.pelanggan_id else ""
                 nama = r.pelanggan_id.nama_wp or r.pelanggan_id.nama or ""
                 tgl = r.tgl_nota.strftime("%Y-%m-%d") if r.tgl_nota else ""
-                
+
                 # Calculate total DPP and PPN from lines
                 total_dpp = sum((line.harga_jual * line.kuantum) for line in r.line_ids)
                 total_ppn = total_dpp * (r.tarif_ppn / 100.0) if r.tarif_ppn else 0
@@ -164,7 +170,7 @@ class ApiTransferEFaktur(http.Controller):
                         tgl,
                         int(total_dpp),
                         int(total_ppn),
-                        0, # PPNBM
+                        0,  # PPNBM
                     ]
                 )
 
