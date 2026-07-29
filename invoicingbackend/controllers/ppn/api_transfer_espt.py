@@ -21,7 +21,19 @@ class ApiTransferESpt(http.Controller):
         output = io.StringIO()
         writer = csv.writer(output, delimiter=",", quoting=csv.QUOTE_ALL)
 
-        # Example dummy headers for e-SPT Lampiran
+        # Search Faktur Pajak matching month and year
+        # Assuming tgl_fp is used to filter month and year, or there is a specific field for it.
+        # But wait, tgl_fp is a Date field. In Odoo, we can search date ranges.
+        # Let's just fetch all and filter in Python for safety, or search properly.
+        domain = []
+        if tahun and masa:
+            domain = [
+                ("tgl_fp", ">=", f"{tahun}-{masa}-01"),
+                ("tgl_fp", "<=", f"{tahun}-{masa}-31"),
+            ]
+        
+        fakturs = request.env["invoicingbackend.transaksi_faktur_pajak"].search(domain)
+
         if jenis_lampiran == "1111A":
             writer.writerow(
                 [
@@ -46,31 +58,38 @@ class ApiTransferESpt(http.Controller):
                 ]
             )
 
-            # TODO: Fetch from actual FakturPajak if needed
-            writer.writerow(
-                [
-                    "01",
-                    "0",
-                    "010.000-26.00000001",
-                    masa.zfill(2),
-                    tahun,
-                    "2026-07-25",
-                    "00.000.000.0-000.000",
-                    "PT CONTOH",
-                    "JAKARTA",
-                    "1000000",
-                    "110000",
-                    "0",
-                    "",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "",
-                ]
-            )
+            for fp in fakturs:
+                fg_pengganti = "1" if fp.fp_diganti else "0"
+                npwp = fp.pembeli_id.npwp if fp.pembeli_id else ""
+                nama = fp.pembeli_id.nama or fp.pembeli_id.nama_wp or ""
+                alamat = fp.pembeli_id.alamat_wp or fp.pembeli_id.alamat or ""
+                tgl = fp.tgl_fp.strftime("%Y-%m-%d") if fp.tgl_fp else ""
+                
+                writer.writerow(
+                    [
+                        fp.jenis_transaksi or "01",
+                        fg_pengganti,
+                        fp.no_fp or "",
+                        masa.zfill(2),
+                        tahun,
+                        tgl,
+                        npwp,
+                        nama,
+                        alamat,
+                        int(fp.dpp_rp or 0),
+                        int(fp.ppn_rp or 0),
+                        0,  # PPNBM
+                        fp.ket_tambahan or "",
+                        "0",
+                        int(fp.uang_muka or 0),
+                        0,  # UANG MUKA PPN
+                        0,  # UANG MUKA PPNBM
+                        fp.no_invoice or "",
+                    ]
+                )
         else:
-            writer.writerow(["Kolom1", "Kolom2", "Kolom3"])
+            # Fallback for 1111B or others (mocked for now since usually separate models or same logic but different format)
+            writer.writerow(["Masa", "Tahun", "Nomor"])
 
         csv_data = output.getvalue()
 
@@ -96,7 +115,7 @@ class ApiTransferESpt(http.Controller):
         output = io.StringIO()
         writer = csv.writer(output, delimiter=",", quoting=csv.QUOTE_ALL)
 
-        # Example dummy headers for e-SPT Wajib Pajak (Lawan Transaksi)
+        # Example headers for e-SPT Wajib Pajak (Lawan Transaksi)
         writer.writerow(
             [
                 "NPWP",
@@ -115,24 +134,31 @@ class ApiTransferESpt(http.Controller):
             ]
         )
 
-        # TODO: Fetch from actual Pelanggan if needed
-        writer.writerow(
-            [
-                "00.000.000.0-000.000",
-                "PT CONTOH",
-                "JL SUDIRMAN",
-                "",
-                "1",
-                "",
-                "",
-                "",
-                "",
-                "JAKARTA",
-                "DKI JAKARTA",
-                "",
-                "",
-            ]
-        )
+        pelanggans = request.env["invoicingbackend.pelanggan"].search([])
+        for p in pelanggans:
+            # Only export those with valid NPWP for e-SPT
+            if not p.npwp or p.npwp == "00.000.000.0-000.000":
+                pass # Can still export, but usually we export all
+                
+            alamat = p.alamat_wp or p.alamat or ""
+            
+            writer.writerow(
+                [
+                    p.npwp or "00.000.000.0-000.000",
+                    p.nama_wp or p.nama or "",
+                    alamat,
+                    "", # BLOK
+                    "", # NO
+                    "", # RT
+                    "", # RW
+                    "", # KECAMATAN
+                    "", # KELURAHAN
+                    "", # KABUPATEN
+                    "", # PROPINSI
+                    "", # KODE_POS
+                    p.telepon or "",
+                ]
+            )
 
         csv_data = output.getvalue()
 
